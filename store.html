@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=beVietnamPro:wght@100..900&family=sora:wght@100..900&family=spaceGrotesk:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#0e1514;color:#dde4e2;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "secondary-container": "#00a572", "on-tertiary-container": "#006a5e", "on-surface-variant": "#b9cbc0", "on-secondary-fixed": "#002113", "primary": "#d1ffe8", "on-tertiary-fixed-variant": "#005047", "on-secondary-fixed-variant": "#005236", "error-container": "#93000a", "tertiary-fixed": "#6ef9e2", "outline-variant": "#3a4a42", "tertiary-container": "#63eed8", "inverse-primary": "#006c4f", "tertiary-fixed-dim": "#4ddcc6", "on-error": "#690005", "on-error-container": "#ffdad6", "error": "#ffb4ab", "on-primary-fixed-variant": "#00513b", "on-primary": "#003828", "primary-container": "#00f5b8", "on-background": "#dde4e2", "on-secondary": "#003824", "tertiary": "#cdfff4", "primary-fixed-dim": "#00e1a9", "on-primary-container": "#006b4f", "inverse-on-surface": "#2b3230", "secondary-fixed-dim": "#4edea3", "surface-bright": "#333b39", "primary-fixed": "#39ffc3", "on-secondary-container": "#00311f", "on-tertiary-fixed": "#00201b", "inverse-surface": "#dde4e2", "surface-dim": "#0e1514", "surface-container-lowest": "#090f0e", "secondary-fixed": "#6ffbbe", "surface": "#0e1514", "on-surface": "#dde4e2", "surface-container": "#1a2120", "background": "#0e1514", "surface-container-highest": "#2f3635", "surface-variant": "#2f3635", "on-tertiary": "#003730", "outline": "#84958b", "surface-container-low": "#161d1c", "on-primary-fixed": "#002116", "surface-container-high": "#242b2a", "surface-tint": "#00e1a9", "secondary": "#4edea3" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "max-content-width": "88rem", "vault-rail-width": "22rem", "gutter-xl": "2rem", "gutter-lg": "1.5rem", "gutter-xs": "0.25rem", "gutter-md": "1rem", "sidebar-width": "17.5rem", "gutter-sm": "0.5rem" }, fontFamily: { "headline-lg": ["sora"], "body-sm": ["beVietnamPro"], "label-cyber": ["spaceGrotesk"], "body-md": ["beVietnamPro"], "label-counter": ["spaceGrotesk"], "headline-md": ["sora"], "display-hero": ["sora"], "body-lg": ["beVietnamPro"], "headline-sm": ["sora"], "display-hero-mobile": ["sora"] }, fontSize: { "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "label-cyber": ["13px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "label-counter": ["11px", { "lineHeight": "14px", "letterSpacing": "0.12em", "fontWeight": "500" }], "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }], "display-hero": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "headline-sm": ["18px", { "lineHeight": "26px", "fontWeight": "600" }], "display-hero-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }] } } } }</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/80 backdrop-blur-xl shadow-[0_4px_24px_rgba(0,0,0,0.4)]"><div class="h-16 px-gutter-md flex items-center justify-between gap-gutter-sm"><div class="flex items-center gap-gutter-sm"><div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center shadow-[0_0_12px_rgba(0,245,184,0.15)]"><span class="material-symbols-outlined text-primary-fixed text-[24px]">shield</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary-fixed leading-tight tracking-tight">نقابة الزمرد</span><span class="font-label-counter text-label-counter text-on-surface-variant uppercase">Al Matjar</span></div></div><div class="flex items-center gap-gutter-xs"><button aria-label="الإشعارات" class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface-variant hover:text-primary transition-colors relative"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-primary-container shadow-[0_0_8px_#00f5b8]"></span></button><div class="flex items-center justify-center p-0.5 rounded-full bg-surface-container-high shadow-[0_0_10px_rgba(0,245,184,0.2)]"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1WUGt0BIBaIPjysuzO_p5YdePPeEKcFs2S7ZEeFNtREzzk4hLeTz9k1wVCBYWT_MAnw_KPPVGhbXjwo_C6BQuDv0i9FGK_UuT09u7WOlRwGxvGZSpoA1ioI3dg7Dz5bObmOnQX2x7ZCg7zVW5Pm9zRkE0MvX_6bWA6DZ0u7oEesfTJgZ-Q4yAz4-DWgMhKCYLlKuT-LobHjEbGTu7abclckY_0pytdPwD0I1NUcwEk1ubNIuDexzzD1o4LarVFJKgmqSoiQcDtJRw"/></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-24 bg-surface min-h-screen"><section class="max-w-6xl mx-auto px-4 pt-24 pb-6"><div class="bg-surface-container-low rounded-xl p-4"><div class="flex items-center justify-between mb-4"><h2 class="font-headline-sm text-headline-sm">السلع المتاحة حالياً</h2><span class="text-xs text-on-surface-variant">من قاعدة البيانات</span></div><div id="store-products" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3"><div class="text-sm text-on-surface-variant">جارٍ تحميل السلع…</div></div></div></section><div class="flex flex-col w-full px-gutter-md space-y-gutter-lg pb-12">
+<!-- Sub-header Breadcrumb / Role Status -->
+<div class="flex items-center justify-between pt-gutter-xs">
+<div class="flex items-center gap-gutter-xs">
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container shadow-[0_0_10px_#00f5b8]"></span>
+<span class="font-label-counter text-label-counter text-secondary uppercase">مستودع الماستر • تحكم مباشر</span>
+</div>
+<div class="px-gutter-sm py-0.5 rounded-full bg-surface-container-high flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[14px] text-primary-fixed">verified</span>
+<span class="font-body-sm text-body-sm text-primary-fixed">متصل ومفعل</span>
+</div>
+</div>
+<!-- Hero Telemetry Vault -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container-low p-gutter-md shadow-xl flex flex-col gap-gutter-md">
+<!-- Ambient Sci-Fi Glow Mesh -->
+<div class="absolute -top-16 -left-16 w-44 h-44 rounded-full bg-secondary-container/20 blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-20 -right-20 w-52 h-52 rounded-full bg-primary-container/10 blur-3xl pointer-events-none"></div>
+<div class="flex items-start justify-between relative z-10">
+<div class="flex flex-col">
+<span class="font-label-counter text-label-counter text-on-surface-variant uppercase tracking-wider">إجمالي مبيعات الخزانة</span>
+<div class="flex items-baseline gap-gutter-xs mt-1">
+<span class="font-display-hero-mobile text-display-hero-mobile text-primary-fixed font-bold tracking-tight">184,200</span>
+<span class="font-label-cyber text-label-cyber text-secondary-fixed">EMD</span>
+</div>
+</div>
+<!-- Centerpiece Floating Talisman Badge -->
+<div class="w-14 h-14 rounded-xl bg-surface-container-highest/80 flex items-center justify-center relative shadow-[0_0_24px_rgba(0,245,184,0.3)]">
+<img class="w-12 h-12 object-contain filter drop-shadow-[0_0_8px_#00f5b8]" data-alt="A glowing crystalline hyper-detailed emerald relic shard floating in dark cyber obsidian space with radiant neon cyan facets and ethereal particle trails, 8k digital render" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4XRVSDlxOHro0xrtsvJr4ZD6u7YiDn9oCVgmpyWcZt0JabEcKrqL4KF3z1xHSeJ3_lEglhZLFoMwlYGtK7EWxlqfLtX-npZnT2vzel5xYcNmF3c8yvQIyBrr8g0RVm9nynextlsn5OnijRWa2uSMDxon9iuwTCqmaJTBuX2Zx5qk03wD4JipjssCIx2yZEQR1f0T1xtV5y202sHeh6f2_lUKPqZSv6zttJXSCBM0_tgrcSFfVWa4m"/>
+</div>
+</div>
+<!-- 2-Column Mini Metrics Strip -->
+<div class="grid grid-cols-2 gap-gutter-sm relative z-10">
+<div class="p-gutter-sm rounded-lg bg-surface-container/70 flex items-center gap-gutter-sm">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">inbox</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-counter text-label-counter text-on-surface-variant">طلبات واردة اليوم</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">18 طلباً</span>
+</div>
+</div>
+<div class="p-gutter-sm rounded-lg bg-surface-container/70 flex items-center gap-gutter-sm">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-tertiary-fixed">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-counter text-label-counter text-on-surface-variant">المخزون المعروض</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">26 سلعة</span>
+</div>
+</div>
+</div>
+<!-- Quick Action: Add Item Trigger -->
+<a class="relative z-10 w-full h-12 rounded-lg bg-gradient-to-r from-primary-container via-secondary-fixed to-secondary-container text-on-primary-container flex items-center justify-center gap-gutter-xs shadow-[0_4px_20px_rgba(0,245,184,0.35)] active:scale-[0.98] transition-transform" href="#add-item-panel">
+<span class="material-symbols-outlined text-[22px] font-bold">add_circle</span>
+<span class="font-headline-sm text-headline-sm font-semibold">إضافة سلعة جديدة للمستودع</span>
+</a>
+</div>
+<!-- Incoming Orders Section -->
+<div class="flex flex-col space-y-gutter-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-gutter-xs">
+<span class="material-symbols-outlined text-primary-fixed text-[20px]">receipt_long</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">الطلبات الواردة للمتجر</h2>
+</div>
+<span class="font-label-counter text-label-counter px-2 py-0.5 rounded-full bg-secondary-container/20 text-secondary-fixed">
+        3 قيد المعاينة
+      </span>
+</div>
+<!-- Order Item 1: Pending (Yuzoriha) -->
+<div class="rounded-xl bg-surface-container p-gutter-md shadow-md flex flex-col gap-gutter-sm transition-all" id="order-9811">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-gutter-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary-fixed shadow-sm">
+<span class="material-symbols-outlined text-[20px]">military_tech</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-on-surface">Yuzoriha</span>
+<span class="font-label-counter text-label-counter text-on-surface-variant">#9811</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">رتبة فارس الزمرد الملكي</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-label-cyber text-label-cyber text-primary font-semibold">5,000 EMD</span>
+<span class="font-label-counter text-label-counter text-on-surface-variant">منذ 6 دقائق</span>
+</div>
+</div>
+<!-- Customer WhatsApp Bar -->
+<div class="flex items-center justify-between p-gutter-xs rounded bg-surface-container-lowest px-gutter-sm">
+<div class="flex items-center gap-gutter-xs">
+<span class="material-symbols-outlined text-[16px] text-secondary-fixed">chat</span>
+<span class="font-label-counter text-label-counter text-on-surface-variant" dir="ltr">+966 54 819 2033</span>
+</div>
+<a class="font-body-sm text-body-sm text-primary-fixed-dim hover:text-primary flex items-center gap-0.5" href="https://wa.me/966548192033" rel="noopener noreferrer" target="_blank">
+<span>مراسلة واتساب</span>
+<span class="material-symbols-outlined text-[14px]">chevron_left</span>
+</a>
+</div>
+<!-- Action Toggles -->
+<div class="grid grid-cols-2 gap-gutter-sm pt-1">
+<button class="h-10 rounded-lg bg-surface-container-high hover:bg-secondary-container/40 text-primary-fixed flex items-center justify-center gap-1 shadow-sm active:scale-95 transition-all" onclick="handleOrderAction('order-9811', 'accepted')">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span class="font-body-md text-body-md font-medium">قبول وتسليم</span>
+</button>
+<button class="h-10 rounded-lg bg-surface-container-lowest text-error hover:bg-error-container/20 flex items-center justify-center gap-1 shadow-sm active:scale-95 transition-all" onclick="handleOrderAction('order-9811', 'rejected')">
+<span class="material-symbols-outlined text-[18px]">cancel</span>
+<span class="font-body-md text-body-md font-medium">رفض الطلب</span>
+</button>
+</div>
+</div>
+<!-- Order Item 2: Pending Fiat (Isagi) -->
+<div class="rounded-xl bg-surface-container p-gutter-md shadow-md flex flex-col gap-gutter-sm transition-all" id="order-9810">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-gutter-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-tertiary-fixed shadow-sm">
+<span class="material-symbols-outlined text-[20px]">diamond</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-on-surface">Isagi</span>
+<span class="font-label-counter text-label-counter text-on-surface-variant">#9810</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">باقة سبائك 10,000 EMD</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-label-cyber text-label-cyber text-tertiary font-semibold">100.00 $</span>
+<span class="font-label-counter text-label-counter text-on-surface-variant">منذ 24 دقيقة</span>
+</div>
+</div>
+<!-- Customer WhatsApp Bar -->
+<div class="flex items-center justify-between p-gutter-xs rounded bg-surface-container-lowest px-gutter-sm">
+<div class="flex items-center gap-gutter-xs">
+<span class="material-symbols-outlined text-[16px] text-secondary-fixed">chat</span>
+<span class="font-label-counter text-label-counter text-on-surface-variant" dir="ltr">+971 50 492 8812</span>
+</div>
+<a class="font-body-sm text-body-sm text-primary-fixed-dim hover:text-primary flex items-center gap-0.5" href="https://wa.me/971504928812" rel="noopener noreferrer" target="_blank">
+<span>مراسلة واتساب</span>
+<span class="material-symbols-outlined text-[14px]">chevron_left</span>
+</a>
+</div>
+<!-- Action Toggles -->
+<div class="grid grid-cols-2 gap-gutter-sm pt-1">
+<button class="h-10 rounded-lg bg-surface-container-high hover:bg-secondary-container/40 text-primary-fixed flex items-center justify-center gap-1 shadow-sm active:scale-95 transition-all" onclick="handleOrderAction('order-9810', 'accepted')">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span class="font-body-md text-body-md font-medium">قبول الدفعة</span>
+</button>
+<button class="h-10 rounded-lg bg-surface-container-lowest text-error hover:bg-error-container/20 flex items-center justify-center gap-1 shadow-sm active:scale-95 transition-all" onclick="handleOrderAction('order-9810', 'rejected')">
+<span class="material-symbols-outlined text-[18px]">cancel</span>
+<span class="font-body-md text-body-md font-medium">إلغاء</span>
+</button>
+</div>
+</div>
+<!-- Order Item 3: Fulfilled (Misi) -->
+<div class="rounded-xl bg-surface-container-low p-gutter-md shadow-sm flex items-center justify-between opacity-80">
+<div class="flex items-center gap-gutter-sm min-w-0">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">verified</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-on-surface">Misi</span>
+<span class="font-label-counter text-label-counter text-on-surface-variant">#9809</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">شارة الشرف الزمردية الكبرى</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-secondary-fixed text-label-counter font-label-counter">
+          تم التسليم بنجاح
+        </span>
+<span class="font-label-counter text-label-counter text-on-surface-variant mt-1">2,800 EMD</span>
+</div>
+</div>
+</div>
+<!-- Inventory Management Section -->
+<div class="flex flex-col space-y-gutter-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-gutter-xs">
+<span class="material-symbols-outlined text-primary-fixed text-[20px]">category</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">إدارة سلع المستودع المعروضة</h2>
+</div>
+<span class="font-label-counter text-label-counter text-on-surface-variant">عرض 3 من 26</span>
+</div>
+<!-- Item Card 1 -->
+<div class="rounded-xl bg-surface-container p-gutter-sm flex flex-col gap-gutter-sm shadow-md" id="catalog-item-1">
+<div class="flex gap-gutter-sm items-center">
+<div class="w-16 h-16 rounded-lg bg-surface-container-lowest shrink-0 overflow-hidden relative shadow-inner">
+<img class="w-full h-full object-cover" data-alt="A dark mystical fantasy crown forged of obsidian and glowing neon teal emerald gems, intricate filigree, regal game asset artwork" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPvVlU71kcKhRrxYjDF-pENcagLKi0mW8wE3lvux5ZDiiTwy2_HKiPuoQdCGHogEqimEnCSFxsPFbHmPdQck2ZutaJJmk5Q6YkabLxmgmlpE0WU1Zl_61YW5RaWnipvBZLgJk_0XxfriXWRyH1xTGYWCy4FovbVwFCplS18EjrDKA67WcqZ8zek8gdvaGb2DGN2QzHeIK-2JOOwDSTjXNSdc2FH_QuM6H80QsASL-D_1zmRAXT3q6V"/>
+<span class="absolute top-1 right-1 px-1 rounded bg-surface-container-lowest/80 text-label-counter font-label-counter text-primary">رتب</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate">رتبة فارس الزمرد</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container/20 text-primary-fixed text-label-counter font-label-counter">نشط بالمتجر</span>
+</div>
+<div class="flex items-center gap-gutter-sm mt-1">
+<span class="font-label-cyber text-label-cyber text-primary-fixed">5,000 EMD</span>
+<span class="font-label-counter text-label-counter text-on-surface-variant">• متوفر: 99</span>
+</div>
+</div>
+</div>
+<!-- Controls row -->
+<div class="flex items-center justify-end gap-gutter-xs pt-1">
+<button class="h-8 px-gutter-sm rounded bg-surface-container-high text-on-surface-variant hover:text-primary flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+<span class="font-body-sm text-body-sm">تعديل</span>
+</button>
+<button class="h-8 px-gutter-sm rounded bg-surface-container-high text-on-surface-variant hover:text-tertiary flex items-center gap-1 transition-colors" onclick="toggleItemVisibility('catalog-item-1')">
+<span class="material-symbols-outlined text-[16px]">visibility_off</span>
+<span class="font-body-sm text-body-sm">تعطيل</span>
+</button>
+<button class="h-8 w-8 rounded bg-surface-container-lowest text-error hover:bg-error-container/20 flex items-center justify-center transition-colors" onclick="deleteCatalogItem('catalog-item-1')">
+<span class="material-symbols-outlined text-[16px]">delete</span>
+</button>
+</div>
+</div>
+<!-- Item Card 2 -->
+<div class="rounded-xl bg-surface-container p-gutter-sm flex flex-col gap-gutter-sm shadow-md" id="catalog-item-2">
+<div class="flex gap-gutter-sm items-center">
+<div class="w-16 h-16 rounded-lg bg-surface-container-lowest shrink-0 overflow-hidden relative shadow-inner">
+<img class="w-full h-full object-cover" data-alt="A chest overflowing with glowing bright green ethereal emerald bullion bars with runes glowing on dark obsidian pedestal, cinematic 3d render" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXxfvKl82W6AsWdcmDrLm5ccDkeUs9_BIfy-Qh3bfSrSPPelAVmL7bZFvbiToyGvR6UOlC_q-_e_--fCGd232u4ofaKharSdKt7rIyzdshi5MLMQwGQbIB5jh1om0eEJE1jxUx0igIILFUiQLMmQpE4zunflxiifF1XuRn7Z3xyfqiYWleYAqc9bwZz_thMGXiRzVxmP_QQSEiyEws-B6bl4v2YaJX7gOZV0kjj4WHxPoY744mpdYR"/>
+<span class="absolute top-1 right-1 px-1 rounded bg-surface-container-lowest/80 text-label-counter font-label-counter text-tertiary">عملات</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate">صندوق سبائك النخبة</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container/20 text-primary-fixed text-label-counter font-label-counter">نشط بالمتجر</span>
+</div>
+<div class="flex items-center gap-gutter-sm mt-1">
+<span class="font-label-cyber text-label-cyber text-tertiary">100.00 $</span>
+<span class="font-label-counter text-label-counter text-on-surface-variant">• متوفر: 45</span>
+</div>
+</div>
+</div>
+<!-- Controls row -->
+<div class="flex items-center justify-end gap-gutter-xs pt-1">
+<button class="h-8 px-gutter-sm rounded bg-surface-container-high text-on-surface-variant hover:text-primary flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+<span class="font-body-sm text-body-sm">تعديل</span>
+</button>
+<button class="h-8 px-gutter-sm rounded bg-surface-container-high text-on-surface-variant hover:text-tertiary flex items-center gap-1 transition-colors" onclick="toggleItemVisibility('catalog-item-2')">
+<span class="material-symbols-outlined text-[16px]">visibility_off</span>
+<span class="font-body-sm text-body-sm">تعطيل</span>
+</button>
+<button class="h-8 w-8 rounded bg-surface-container-lowest text-error hover:bg-error-container/20 flex items-center justify-center transition-colors" onclick="deleteCatalogItem('catalog-item-2')">
+<span class="material-symbols-outlined text-[16px]">delete</span>
+</button>
+</div>
+</div>
+<!-- Item Card 3 -->
+<div class="rounded-xl bg-surface-container p-gutter-sm flex flex-col gap-gutter-sm shadow-md" id="catalog-item-3">
+<div class="flex gap-gutter-sm items-center">
+<div class="w-16 h-16 rounded-lg bg-surface-container-lowest shrink-0 overflow-hidden relative shadow-inner">
+<img class="w-full h-full object-cover" data-alt="A glowing crystalline talisman amulet with runic geometric engraving emitting soft cyan light in pure black studio lighting, hyper realistic render" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDa3kIZune9ATHHczT8iFfD41lQ-9HaCQHZ5RsGIJROGsv2sNpTAWkQnEnul05zBpQbeAehrvELIYyCdydxeGQHjRp_IY2gr2fgpawfI8IBmuIboL6fywjhAuA6H8tYkX4FKDSpX3GdjGCylcurJrXyAR2pzDLJR0pWZbO84hnq24Bj-aCQYSVk1TCsu5A756a-eyjGBMVvXhempRHra8z8xFIz1cz9d6j80Cms0iQWfZBp_SmPtaGm"/>
+<span class="absolute top-1 right-1 px-1 rounded bg-surface-container-lowest/80 text-label-counter font-label-counter text-secondary">أدوات</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate">شارة الشرف الزمردية</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant text-label-counter font-label-counter">مخزون محدود</span>
+</div>
+<div class="flex items-center gap-gutter-sm mt-1">
+<span class="font-label-cyber text-label-cyber text-primary-fixed">2,800 EMD</span>
+<span class="font-label-counter text-label-counter text-on-surface-variant">• متوفر: 3</span>
+</div>
+</div>
+</div>
+<!-- Controls row -->
+<div class="flex items-center justify-end gap-gutter-xs pt-1">
+<button class="h-8 px-gutter-sm rounded bg-surface-container-high text-on-surface-variant hover:text-primary flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+<span class="font-body-sm text-body-sm">تعديل</span>
+</button>
+<button class="h-8 px-gutter-sm rounded bg-surface-container-high text-on-surface-variant hover:text-tertiary flex items-center gap-1 transition-colors" onclick="toggleItemVisibility('catalog-item-3')">
+<span class="material-symbols-outlined text-[16px]">visibility_off</span>
+<span class="font-body-sm text-body-sm">تعطيل</span>
+</button>
+<button class="h-8 w-8 rounded bg-surface-container-lowest text-error hover:bg-error-container/20 flex items-center justify-center transition-colors" onclick="deleteCatalogItem('catalog-item-3')">
+<span class="material-symbols-outlined text-[16px]">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Add New Item Form Section -->
+<div class="rounded-xl bg-surface-container-high p-gutter-md shadow-2xl flex flex-col space-y-gutter-md" id="add-item-panel">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-gutter-xs">
+<span class="material-symbols-outlined text-primary-fixed text-[22px]">post_add</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">إضافة سلعة جديدة للمتجر</h3>
+</div>
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse shadow-[0_0_8px_#00f5b8]"></span>
+</div>
+<form class="flex flex-col space-y-gutter-sm" id="new-item-form" onsubmit="handlePublishItem(event)">
+<!-- Item Title -->
+<div class="flex flex-col space-y-1">
+<label class="font-body-sm text-body-sm text-on-surface-variant" for="item-title">اسم السلعة / الخدمة</label>
+<input class="w-full h-11 px-gutter-sm rounded-lg bg-surface-container-lowest text-on-surface placeholder:text-outline font-body-md text-body-md focus:outline-none focus:ring-0 focus:shadow-[0_0_12px_rgba(0,245,184,0.3)] transition-all" id="item-title" placeholder="مثال: رتبة أمير الزمرد، تميمة حماية..." required="" type="text"/>
+</div>
+<!-- Category Picker -->
+<div class="flex flex-col space-y-1">
+<label class="font-body-sm text-body-sm text-on-surface-variant" for="item-category">تصنيف السلعة</label>
+<div class="relative">
+<select class="w-full h-11 px-gutter-sm rounded-lg bg-surface-container-lowest text-on-surface font-body-md text-body-md appearance-none focus:outline-none focus:ring-0" id="item-category">
+<option value="ranks">رتب النقابة المعتمدة (Ranks)</option>
+<option value="currency">باقات سبائك الزمرد (Currency)</option>
+<option value="badges">شارات وأوسمة شرفية (Badges)</option>
+<option value="artifacts">مقتنيات رقمية نادرة (Artifacts)</option>
+</select>
+<span class="material-symbols-outlined absolute left-3 top-3 pointer-events-none text-on-surface-variant text-[18px]">expand_more</span>
+</div>
+</div>
+<!-- Pricing Dual Grid -->
+<div class="grid grid-cols-2 gap-gutter-sm">
+<div class="flex flex-col space-y-1">
+<label class="font-body-sm text-body-sm text-on-surface-variant" for="item-price-emd">السعر بـ (EMD)</label>
+<div class="relative flex items-center">
+<input class="w-full h-11 px-gutter-sm rounded-lg bg-surface-container-lowest text-primary-fixed font-label-cyber text-label-cyber focus:outline-none focus:ring-0" id="item-price-emd" placeholder="5000" type="number"/>
+<span class="absolute left-2.5 font-label-counter text-label-counter text-on-surface-variant">EMD</span>
+</div>
+</div>
+<div class="flex flex-col space-y-1">
+<label class="font-body-sm text-body-sm text-on-surface-variant" for="item-price-fiat">السعر بالدولار ($)</label>
+<div class="relative flex items-center">
+<input class="w-full h-11 px-gutter-sm rounded-lg bg-surface-container-lowest text-tertiary-fixed font-label-cyber text-label-cyber focus:outline-none focus:ring-0" id="item-price-fiat" placeholder="49.99" step="0.01" type="number"/>
+<span class="absolute left-2.5 font-label-counter text-label-counter text-on-surface-variant">USD</span>
+</div>
+</div>
+</div>
+<!-- Quantity Available -->
+<div class="flex flex-col space-y-1">
+<label class="font-body-sm text-body-sm text-on-surface-variant" for="item-stock">الكمية المتوفرة بالمستودع</label>
+<input class="w-full h-11 px-gutter-sm rounded-lg bg-surface-container-lowest text-on-surface font-body-md text-body-md focus:outline-none focus:ring-0" id="item-stock" placeholder="10" required="" type="number"/>
+</div>
+<!-- Submit & Publish Button -->
+<button class="w-full h-12 mt-2 rounded-lg bg-primary-container text-on-primary-container hover:bg-primary-fixed flex items-center justify-center gap-gutter-xs shadow-[0_0_18px_rgba(0,245,184,0.3)] font-headline-sm text-headline-sm font-semibold active:scale-[0.98] transition-all" type="submit">
+<span class="material-symbols-outlined text-[20px]">cloud_upload</span>
+<span>حفظ ونشر السلعة بالمتجر الآن</span>
+</button>
+</form>
+</div>
+<!-- Toast Notification Feedback -->
+<div class="hidden fixed bottom-20 inset-x-gutter-md z-50 p-gutter-sm rounded-lg bg-surface-container-highest text-primary flex items-center justify-between shadow-[0_0_20px_rgba(0,245,184,0.4)]" id="admin-toast">
+<div class="flex items-center gap-gutter-xs">
+<span class="material-symbols-outlined text-primary-container text-[20px]">verified</span>
+<span class="font-body-md text-body-md text-on-surface" id="toast-message">تم تنفيذ الإجراء بنجاح</span>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface" onclick="document.getElementById('admin-toast').classList.add('hidden')">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</div>
+<script>
+  function showToast(message) {
+    const toast = document.getElementById('admin-toast');
+    const msgElem = document.getElementById('toast-message');
+    if (toast && msgElem) {
+      msgElem.innerText = message;
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 3500);
+    }
+  }
+
+  function handleOrderAction(orderId, action) {
+    const orderElement = document.getElementById(orderId);
+    if (!orderElement) return;
+
+    if (action === 'accepted') {
+      orderElement.classList.add('opacity-40');
+      showToast('تم قبول الطلب وتأكيد عملية التسليم');
+    } else {
+      orderElement.classList.add('opacity-20');
+      showToast('تم رفض الطلب وإلغاء العملية');
+    }
+  }
+
+  function toggleItemVisibility(itemId) {
+    const item = document.getElementById(itemId);
+    if (item) {
+      item.classList.toggle('opacity-50');
+      showToast('تم تحديث حالة الظهور في المتجر');
+    }
+  }
+
+  function deleteCatalogItem(itemId) {
+    const item = document.getElementById(itemId);
+    if (item) {
+      item.style.display = 'none';
+      showToast('تم حذف السلعة من المستودع بنجاح');
+    }
+  }
+
+  function handlePublishItem(event) {
+    event.preventDefault();
+    const titleInput = document.getElementById('item-title');
+    const name = titleInput ? titleInput.value : 'السلعة';
+    showToast(`تم نشر "${name}" بنجاح في متجر النقابة`);
+    event.target.reset();
+  }
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_-4px_24px_rgba(0,0,0,0.5)]" data-active-classes="text-primary-fixed bg-surface-container/60 shadow-[0_0_14px_rgba(0,245,184,0.15)]"><div class="flex justify-around items-center h-16 px-gutter-xs"><a class="flex flex-col items-center justify-center min-w-[54px] min-h-[44px] h-12 px-gutter-xs rounded-lg text-on-surface-variant transition-all" data-path="al-raisiya" href="#"><span class="material-symbols-outlined text-[22px]">castle</span><span class="font-label-counter text-label-counter mt-0.5">الرئيسية</span></a><a class="flex flex-col items-center justify-center min-w-[54px] min-h-[44px] h-12 px-gutter-xs rounded-lg text-on-surface-variant transition-all" data-path="al-khazina" href="#"><span class="material-symbols-outlined text-[22px]">lock_open_right</span><span class="font-label-counter text-label-counter mt-0.5">الخزينة</span></a><a aria-current="page" class="flex flex-col items-center justify-center min-w-[54px] min-h-[44px] h-12 px-gutter-xs rounded-lg transition-all text-primary-fixed bg-surface-container/60 shadow-[0_0_14px_rgba(0,245,184,0.15)]" data-path="al-matjar" href="#"><span class="material-symbols-outlined text-[22px]">diamond</span><span class="font-label-counter text-label-counter mt-0.5">المتجر</span></a><a class="flex flex-col items-center justify-center min-w-[54px] min-h-[44px] h-12 px-gutter-xs rounded-lg text-on-surface-variant transition-all" data-path="al-idara" href="#"><span class="material-symbols-outlined text-[22px]">military_tech</span><span class="font-label-counter text-label-counter mt-0.5">الإدارة</span></a><a class="flex flex-col items-center justify-center min-w-[54px] min-h-[44px] h-12 px-gutter-xs rounded-lg text-on-surface-variant transition-all" data-path="lawhat-al-qiyada" href="#"><span class="material-symbols-outlined text-[22px]">dashboard</span><span class="font-label-counter text-label-counter mt-0.5">لوحة القيادة</span></a></div></nav><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/config.js"></script><script src="js/supabase-client.js"></script><script src="js/app.js"></script></body></html>

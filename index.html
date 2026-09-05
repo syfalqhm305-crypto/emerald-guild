@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>نقابة الزمرد السيادية</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="shared/base.css"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="shared/tailwind-config.js"></script>
+</head>
+<body class="bg-background font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container">
+
+<header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.4)]">
+  <div class="h-20 w-full px-gutter-lg flex items-center justify-between gap-gutter-md">
+    <div class="flex items-center gap-gutter-sm">
+      <div class="relative flex items-center justify-center w-11 h-11 rounded-full bg-surface-container-high overflow-hidden" id="logoBox">
+        <span class="material-symbols-outlined text-primary-container">diamond</span>
+      </div>
+      <div>
+        <div class="flex items-center gap-gutter-xs">
+          <span class="font-headline-sm text-headline-sm text-primary tracking-wide" id="guildNameTop">نقابة الزمرد</span>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant" id="guildTaglineTop">ثروتك، تحت حماية الزمرد</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-gutter-sm">
+      <button id="memberLoginBtn" class="hidden md:flex items-center gap-gutter-xs bg-surface-container-low hover:bg-surface-container-high text-on-surface font-headline-sm text-body-sm px-gutter-md py-gutter-xs rounded-lg transition-colors">
+        <span class="material-symbols-outlined text-[18px]">person</span>
+        <span>دخول عضو</span>
+      </button>
+      <button id="adminLoginBtn" class="flex items-center gap-gutter-xs bg-primary-container text-on-primary-container font-headline-sm text-body-sm px-gutter-md py-gutter-xs rounded-lg hover:bg-primary-fixed transition-colors">
+        <span class="material-symbols-outlined text-[18px]">shield_lock</span>
+        <span>تسجيل دخول المسؤول</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="w-full pt-20 bg-background">
+<div class="relative w-full overflow-hidden pb-gutter-xl">
+  <div class="absolute top-10 left-1/2 -translate-x-1/2 w-[42rem] h-[22rem] bg-primary-container/10 blur-[130px] rounded-full pointer-events-none -z-10"></div>
+  <div class="max-w-max-content-width mx-auto px-gutter-lg pt-gutter-lg flex flex-col gap-gutter-xl">
+
+  <!-- Hero: Guild intro + logo -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-xl items-center bg-surface-container/60 backdrop-blur-xl rounded-xl p-gutter-lg lg:p-gutter-xl shadow-xl relative overflow-hidden">
+    <div class="lg:col-span-7 flex flex-col gap-gutter-md z-10">
+      <div class="inline-flex items-center gap-gutter-xs px-gutter-sm py-1 rounded-full bg-surface-container-highest w-fit">
+        <span class="material-symbols-outlined text-primary-fixed-dim text-[16px]">chevron_left</span>
+        <span class="font-label-counter text-label-counter text-primary-fixed">SOVEREIGN EMERALD ORDER</span>
+      </div>
+      <h1 class="font-display-hero text-display-hero text-on-surface tracking-tight leading-tight" id="guildNameHero">نقابة الزمرد السيادية</h1>
+      <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed" id="guildIntroText">جارِ التحميل...</p>
+      <div class="flex flex-wrap items-center gap-gutter-md pt-gutter-sm">
+        <button id="bankGateBtn" class="flex items-center gap-gutter-xs bg-primary-container text-on-primary-container font-headline-sm text-body-lg px-gutter-lg py-gutter-sm rounded-lg hover:bg-primary-fixed transition-all shadow-[0_0_20px_rgba(0,245,184,0.3)]">
+          <span class="material-symbols-outlined">account_balance</span>
+          <span>دخول للبنك</span>
+        </button>
+        <a href="register.html" class="flex items-center gap-gutter-xs bg-surface-container-highest hover:bg-surface-bright text-primary font-headline-sm text-body-lg px-gutter-lg py-gutter-sm rounded-lg transition-colors">
+          <span class="material-symbols-outlined">person_add</span>
+          <span>تسجيل عضو جديد</span>
+        </a>
+      </div>
+    </div>
+    <div class="lg:col-span-5 flex items-center justify-center z-10" id="logoHeroBox">
+      <div class="w-48 h-48 rounded-full bg-gradient-to-b from-primary-container/20 to-transparent border-2 border-primary-container/50 flex items-center justify-center shadow-[0_0_60px_rgba(0,245,184,0.35)]">
+        <span class="material-symbols-outlined text-primary-container text-[96px]">diamond</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- إحصائيات وأرصدة النقابة العامة -->
+  <div class="flex flex-col gap-gutter-md">
+    <h3 class="font-headline-md text-headline-sm text-on-surface">إحصائيات وأرصدة النقابة العامة</h3>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-gutter-md" id="statsGrid">
+      <!-- تُملأ ديناميكياً -->
+    </div>
+  </div>
+
+  <!-- بوابات التنقل: البنك / المتجر -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter-lg">
+    <button id="bankGateCard" class="text-right flex flex-col gap-gutter-sm bg-surface-container/60 hover:bg-surface-container-high backdrop-blur-xl rounded-xl p-gutter-lg shadow-lg transition-colors">
+      <div class="flex items-center gap-gutter-sm">
+        <span class="material-symbols-outlined text-primary-container text-[32px]">account_balance</span>
+        <h2 class="font-headline-lg text-headline-md text-on-surface">بوابة البنك والمصرف</h2>
+      </div>
+      <p class="font-body-md text-body-md text-on-surface-variant">سجّل دخولك لعرض محفظتك، رصيدك، وطلباتك المعلقة.</p>
+    </button>
+    <a href="store.html" class="flex flex-col gap-gutter-sm bg-surface-container/60 hover:bg-surface-container-high backdrop-blur-xl rounded-xl p-gutter-lg shadow-lg transition-colors">
+      <div class="flex items-center gap-gutter-sm">
+        <span class="material-symbols-outlined text-secondary-fixed text-[32px]">storefront</span>
+        <h2 class="font-headline-lg text-headline-md text-on-surface">متجر النقابة المفتوح</h2>
+      </div>
+      <p class="font-body-md text-body-md text-on-surface-variant">تصفح واطلب دون أي قيود أو تسجيل دخول مسبق.</p>
+    </a>
+  </div>
+
+  <!-- مجلس القيادة العليا -->
+  <div class="flex flex-col gap-gutter-md">
+    <h3 class="font-headline-md text-headline-sm text-on-surface">مجلس القيادة العليا لنقابة الزمرد</h3>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-gutter-md" id="leadersGrid">
+      <!-- تُملأ ديناميكياً -->
+    </div>
+  </div>
+
+  <!-- تواصل مع مسؤول المتجر -->
+  <div class="bg-gradient-to-r from-surface-container via-surface-container-high to-surface-container rounded-xl p-gutter-lg flex flex-col md:flex-row items-center justify-between gap-gutter-lg shadow-lg">
+    <div class="flex items-center gap-gutter-md">
+      <div class="w-14 h-14 rounded-2xl bg-secondary-container/20 text-secondary-fixed flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined text-[32px]">support_agent</span>
+      </div>
+      <div class="flex flex-col gap-1">
+        <h4 class="font-headline-md text-headline-sm text-on-surface">مسؤول المتجر والخدمات الخاصة متاح الآن</h4>
+        <p class="font-body-md text-body-sm text-on-surface-variant max-w-xl">استفسار عن شحن الرصيد أو شراء رتبة؟ تواصل مباشرة عبر واتساب.</p>
+      </div>
+    </div>
+    <button id="contactStoreBtn" class="shrink-0 flex items-center gap-gutter-sm bg-primary-container hover:bg-primary-fixed text-on-primary-container font-headline-sm text-body-lg px-gutter-lg py-gutter-sm rounded-lg transition-all shadow-[0_0_20px_rgba(0,245,184,0.3)]">
+      <span class="material-symbols-outlined text-[24px]">chat</span>
+      <span>تواصل فوري عبر واتساب مع مسؤول المتجر</span>
+    </button>
+  </div>
+
+  </div>
+</div>
+</main>
+
+<footer class="w-full bg-surface-container-lowest py-gutter-xl">
+  <div class="max-w-max-content-width mx-auto px-gutter-lg flex flex-col md:flex-row items-center justify-between gap-gutter-md">
+    <div class="flex flex-col items-center md:items-start gap-gutter-xs">
+      <span class="font-headline-sm text-headline-sm text-primary">نقابة الزمرد</span>
+      <p class="font-body-sm text-body-sm text-outline">جميع الحقوق محفوظة © نقابة وبنك الزمرد السيادي</p>
+    </div>
+  </div>
+</footer>
+
+<!-- مودال دخول عضو -->
+<div id="memberLoginModal" class="eg-modal-backdrop eg-hidden">
+  <div class="w-full max-w-sm bg-surface-container-high rounded-xl p-gutter-lg shadow-2xl border border-outline-variant/40">
+    <div class="flex items-center justify-between mb-gutter-md">
+      <h3 class="font-headline-md text-headline-sm text-on-surface">دخول عضو النقابة</h3>
+      <button data-close-modal="memberLoginModal" class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <form id="memberLoginForm" class="flex flex-col gap-gutter-md">
+      <input required type="text" id="memberLoginId" placeholder="اسم المستخدم أو الأيدي (#EMD-xxxx)" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary-container"/>
+      <input required type="password" id="memberLoginPassword" placeholder="كلمة المرور" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary-container"/>
+      <button type="submit" class="w-full bg-primary-container text-on-primary-container font-headline-sm py-gutter-sm rounded-lg hover:bg-primary-fixed transition-colors">دخول</button>
+      <a href="register.html" class="text-center text-body-sm text-secondary-fixed hover:underline">ليس لديك حساب؟ سجّل الآن</a>
+    </form>
+  </div>
+</div>
+
+<!-- مودال دخول المسؤول -->
+<div id="adminLoginModal" class="eg-modal-backdrop eg-hidden">
+  <div class="w-full max-w-sm bg-surface-container-high rounded-xl p-gutter-lg shadow-2xl border border-outline-variant/40">
+    <div class="flex items-center justify-between mb-gutter-md">
+      <h3 class="font-headline-md text-headline-sm text-on-surface">تسجيل دخول المسؤول</h3>
+      <button data-close-modal="adminLoginModal" class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <form id="adminLoginForm" class="flex flex-col gap-gutter-md">
+      <select id="adminRoleSelect" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container">
+        <option value="bank">مسؤول البنك</option>
+        <option value="store">مسؤول المتجر</option>
+        <option value="sovereign">قائدة النقابة (التحكم الشامل)</option>
+      </select>
+      <input required type="password" id="adminLoginPassword" placeholder="كلمة المرور" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary-container"/>
+      <button type="submit" class="w-full bg-primary-container text-on-primary-container font-headline-sm py-gutter-sm rounded-lg hover:bg-primary-fixed transition-colors">دخول</button>
+    </form>
+  </div>
+</div>
+
+<script src="shared/db.js"></script>
+<script src="shared/auth.js"></script>
+<script src="shared/ui.js"></script>
+<script>
+function openModal(id){ document.getElementById(id).classList.remove('eg-hidden'); }
+function closeModal(id){ document.getElementById(id).classList.add('eg-hidden'); }
+document.querySelectorAll('[data-close-modal]').forEach(btn => {
+  btn.addEventListener('click', () => closeModal(btn.dataset.closeModal));
+});
+
+document.getElementById('memberLoginBtn').addEventListener('click', () => openModal('memberLoginModal'));
+document.getElementById('adminLoginBtn').addEventListener('click', () => openModal('adminLoginModal'));
+document.getElementById('bankGateBtn').addEventListener('click', () => openModal('memberLoginModal'));
+document.getElementById('bankGateCard').addEventListener('click', () => openModal('memberLoginModal'));
+
+document.getElementById('memberLoginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const id = document.getElementById('memberLoginId').value.trim();
+  const pw = document.getElementById('memberLoginPassword').value;
+  const res = await EGDB.authenticateMember(id, pw);
+  if (res.ok) {
+    EGAuth.loginMember(res.member);
+    window.location.href = 'member-dashboard.html';
+  } else {
+    EGUI.toast(res.error, 'error');
+  }
+});
+
+document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const role = document.getElementById('adminRoleSelect').value;
+  const pw = document.getElementById('adminLoginPassword').value;
+  const res = await EGDB.authenticateAdmin(role, pw);
+  if (res.ok) {
+    EGAuth.loginAdmin(role);
+    const pages = { bank: 'bank-admin.html', store: 'store-admin.html', sovereign: 'sovereign.html' };
+    window.location.href = pages[role];
+  } else {
+    EGUI.toast(res.error, 'error');
+  }
+});
+
+async function init() {
+  const settings = await EGDB.getSettings();
+  document.getElementById('guildNameTop').textContent = settings.guildName;
+  document.getElementById('guildTaglineTop').textContent = settings.guildTagline;
+  document.getElementById('guildNameHero').textContent = settings.guildName;
+  document.getElementById('guildIntroText').textContent = settings.guildIntro;
+  if (settings.logoUrl) {
+    document.getElementById('logoBox').innerHTML = `<img src="${settings.logoUrl}" class="w-full h-full object-cover rounded-full" alt="logo"/>`;
+    document.getElementById('logoHeroBox').innerHTML = `<img src="${settings.logoUrl}" class="w-48 h-48 object-cover rounded-full border-2 border-primary-container/50 shadow-[0_0_60px_rgba(0,245,184,0.35)]" alt="logo"/>`;
+  }
+
+  document.getElementById('contactStoreBtn').addEventListener('click', () => {
+    EGUI.openWhatsApp(settings.storeWhatsapp, `مرحباً، لدي استفسار بخصوص ${settings.guildName}`);
+  });
+
+  const members = await EGDB.listMembers();
+  const totalBalance = members.reduce((s, m) => s + m.balance, 0);
+  const stats = [
+    { icon: 'diamond', label: 'خزينة النقابة', value: EGUI.formatNumber(settings.treasuryBalance) + ' EMD' },
+    { icon: 'group', label: 'عدد الأعضاء', value: EGUI.formatNumber(members.length) },
+    { icon: 'account_balance_wallet', label: 'إجمالي أرصدة الأعضاء', value: EGUI.formatNumber(totalBalance) + ' EMD' },
+    { icon: 'storefront', label: 'سلع المتجر المتاحة', value: EGUI.formatNumber((await EGDB.listStoreItems()).length) }
+  ];
+  document.getElementById('statsGrid').innerHTML = stats.map(s => `
+    <div class="bg-surface-container/60 backdrop-blur-md rounded-xl p-gutter-md flex flex-col gap-gutter-xs shadow-sm">
+      <span class="material-symbols-outlined text-primary-container">${s.icon}</span>
+      <span class="font-label-cyber text-label-cyber text-on-surface-variant">${s.label}</span>
+      <span class="font-headline-md text-headline-sm text-on-surface">${s.value}</span>
+    </div>`).join('');
+
+  const leaders = await EGDB.listLeaders();
+  document.getElementById('leadersGrid').innerHTML = leaders.map(l => `
+    <div class="bg-surface-container/60 backdrop-blur-md rounded-xl p-gutter-md flex flex-col items-center text-center gap-gutter-xs shadow-sm hover:bg-surface-container-high transition-colors">
+      <div class="w-16 h-16 rounded-full bg-surface-container-highest flex items-center justify-center">
+        <span class="material-symbols-outlined text-primary-container text-[28px]">military_tech</span>
+      </div>
+      <span class="font-label-counter text-label-counter text-primary-fixed-dim">${EGUI.escapeHtml(l.tag || '')}</span>
+      <h5 class="font-headline-sm text-body-lg text-on-surface">${EGUI.escapeHtml(l.name)}</h5>
+      <span class="font-body-sm text-body-sm text-on-surface-variant">${EGUI.escapeHtml(l.title)}</span>
+    </div>`).join('');
+}
+init();
+</script>
+</body>
+</html>

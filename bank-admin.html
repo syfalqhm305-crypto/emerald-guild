@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>لوحة تحكم مسؤول البنك — نقابة الزمرد</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link rel="stylesheet" href="shared/base.css"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="shared/tailwind-config.js"></script>
+</head>
+<body class="bg-background font-body-md text-on-surface antialiased">
+
+<header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.4)]">
+  <div class="h-16 w-full px-gutter-lg flex items-center justify-between gap-gutter-md">
+    <a href="index.html" class="flex items-center gap-gutter-xs text-primary font-headline-sm text-headline-sm">
+      <span class="material-symbols-outlined">account_balance</span> إدارة البنك
+    </a>
+    <button id="logoutBtn" class="flex items-center gap-gutter-xs text-on-surface-variant hover:text-on-surface text-body-sm">
+      <span class="material-symbols-outlined text-[18px]">logout</span> خروج
+    </button>
+  </div>
+</header>
+
+<main class="w-full pt-24 pb-gutter-xl max-w-5xl mx-auto px-gutter-lg flex flex-col gap-gutter-xl">
+
+  <!-- طلبات الانضمام الجديدة -->
+  <section class="flex flex-col gap-gutter-sm">
+    <h2 class="font-headline-md text-headline-md text-primary">طلبات الانضمام الجديدة</h2>
+    <div id="regList" class="flex flex-col gap-gutter-xs"></div>
+    <p id="regEmpty" class="text-body-sm text-on-surface-variant eg-hidden">لا توجد طلبات جديدة.</p>
+  </section>
+
+  <!-- مراجعة الطلبات المالية -->
+  <section class="flex flex-col gap-gutter-sm">
+    <h2 class="font-headline-md text-headline-md text-primary">مراجعة واعتماد طلبات السحب والشحن والتحويل المعلقة</h2>
+    <div id="txList" class="flex flex-col gap-gutter-xs"></div>
+    <p id="txEmpty" class="text-body-sm text-on-surface-variant eg-hidden">لا توجد طلبات معلقة.</p>
+  </section>
+
+  <!-- إدارة حسابات الأعضاء -->
+  <section class="flex flex-col gap-gutter-sm">
+    <div class="flex items-center justify-between">
+      <h2 class="font-headline-md text-headline-md text-primary">إدارة حسابات الأعضاء بالكامل</h2>
+      <button id="openAddMember" class="flex items-center gap-gutter-xs bg-primary-container text-on-primary-container font-headline-sm text-body-sm px-gutter-md py-gutter-xs rounded-lg">
+        <span class="material-symbols-outlined text-[18px]">person_add</span> إضافة عضو
+      </button>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-right border-collapse">
+        <thead>
+          <tr class="text-body-sm text-on-surface-variant border-b border-outline-variant/30">
+            <th class="py-gutter-xs">الأيدي</th><th>اللقب</th><th>المستخدم</th><th>الرتبة</th><th>الرصيد</th><th>الحالة</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="membersTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<!-- مودال إضافة / تعديل عضو -->
+<div id="memberModal" class="eg-modal-backdrop eg-hidden">
+  <div class="w-full max-w-md bg-surface-container-high rounded-xl p-gutter-lg shadow-2xl border border-outline-variant/40">
+    <div class="flex items-center justify-between mb-gutter-md">
+      <h3 id="memberModalTitle" class="font-headline-md text-headline-sm text-on-surface">إضافة عضو جديد في البنك</h3>
+      <button data-close-modal="memberModal" class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <form id="memberForm" class="grid grid-cols-1 sm:grid-cols-2 gap-gutter-md">
+      <input type="hidden" id="editMemberDbId"/>
+      <div class="sm:col-span-2">
+        <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">اللقب</label>
+        <input required id="fNickname" type="text" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+      </div>
+      <div>
+        <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">اسم المستخدم</label>
+        <input required id="fUsername" type="text" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+      </div>
+      <div>
+        <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">كلمة المرور</label>
+        <input id="fPassword" type="text" placeholder="اتركه فارغاً لعدم التغيير" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+      </div>
+      <div>
+        <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">الأيدي (اختياري، تلقائي إن ترك فارغ)</label>
+        <input id="fMemberId" type="text" placeholder="#EMD-0000" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+      </div>
+      <div>
+        <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">الرتبة</label>
+        <input id="fRank" type="text" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+      </div>
+      <div>
+        <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">الرصيد</label>
+        <input id="fBalance" type="number" value="0" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+      </div>
+      <div>
+        <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">الحالة</label>
+        <select id="fStatus" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container">
+          <option value="active">مفعّل</option>
+          <option value="suspended">موقوف</option>
+        </select>
+      </div>
+      <button type="submit" class="sm:col-span-2 w-full bg-primary-container text-on-primary-container font-headline-sm py-gutter-sm rounded-lg hover:bg-primary-fixed transition-colors">حفظ</button>
+    </form>
+  </div>
+</div>
+
+<script src="shared/db.js"></script>
+<script src="shared/auth.js"></script>
+<script src="shared/ui.js"></script>
+<script>
+const session = EGAuth.requireRole('bank', 'index.html');
+document.getElementById('logoutBtn').addEventListener('click', () => EGAuth.logout('index.html'));
+
+function openModal(id){ document.getElementById(id).classList.remove('eg-hidden'); }
+function closeModal(id){ document.getElementById(id).classList.add('eg-hidden'); }
+document.querySelectorAll('[data-close-modal]').forEach(btn => btn.addEventListener('click', () => closeModal(btn.dataset.closeModal)));
+
+function typeLabel(t) { return { deposit: 'إيداع', withdraw: 'سحب', transfer: 'تحويل' }[t] || t; }
+
+async function refreshRegistrations() {
+  const regs = (await EGDB.listRegistrationRequests()).filter(r => r.status === 'pending');
+  document.getElementById('regList').innerHTML = regs.map(r => `
+    <div class="flex items-center justify-between bg-surface-container-low rounded-lg p-gutter-sm">
+      <div class="flex flex-col">
+        <span class="font-body-md text-body-md text-on-surface">${EGUI.escapeHtml(r.nickname)} <span class="text-on-surface-variant text-body-sm">(${EGUI.escapeHtml(r.username)})</span></span>
+        <span class="font-body-sm text-body-sm text-on-surface-variant">${new Date(r.date).toLocaleString('ar')}</span>
+      </div>
+      <div class="flex gap-gutter-xs">
+        <button data-approve="${r.id}" class="px-gutter-sm py-1 rounded-lg bg-primary-container text-on-primary-container text-body-sm">قبول</button>
+        <button data-reject="${r.id}" class="px-gutter-sm py-1 rounded-lg bg-error/20 text-error text-body-sm">رفض</button>
+      </div>
+    </div>`).join('');
+  document.getElementById('regEmpty').classList.toggle('eg-hidden', regs.length > 0);
+
+  document.querySelectorAll('[data-approve]').forEach(b => b.addEventListener('click', async () => {
+    await EGDB.approveRegistration(b.dataset.approve);
+    EGUI.toast('تم قبول العضو');
+    refreshAll();
+  }));
+  document.querySelectorAll('[data-reject]').forEach(b => b.addEventListener('click', async () => {
+    await EGDB.rejectRegistration(b.dataset.reject);
+    EGUI.toast('تم رفض الطلب');
+    refreshAll();
+  }));
+}
+
+async function refreshTransactions() {
+  const txs = await EGDB.listPendingTransactions();
+  const members = await EGDB.listMembers();
+  const memberOf = (id) => members.find(m => m.id === id);
+  document.getElementById('txList').innerHTML = txs.map(t => {
+    const m = memberOf(t.memberId);
+    return `
+    <div class="flex items-center justify-between bg-surface-container-low rounded-lg p-gutter-sm">
+      <div class="flex flex-col">
+        <span class="font-body-md text-body-md text-on-surface">${m ? EGUI.escapeHtml(m.nickname) : '—'} — ${typeLabel(t.type)} ${EGUI.formatNumber(t.amount)} EMD ${t.toMemberId ? 'إلى ' + EGUI.escapeHtml(t.toMemberId) : ''}</span>
+        <span class="font-body-sm text-body-sm text-on-surface-variant">${new Date(t.date).toLocaleString('ar')} ${t.note ? '— ' + EGUI.escapeHtml(t.note) : ''}</span>
+      </div>
+      <div class="flex gap-gutter-xs">
+        <button data-approve-tx="${t.id}" class="px-gutter-sm py-1 rounded-lg bg-primary-container text-on-primary-container text-body-sm">قبول</button>
+        <button data-reject-tx="${t.id}" class="px-gutter-sm py-1 rounded-lg bg-error/20 text-error text-body-sm">رفض</button>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('txEmpty').classList.toggle('eg-hidden', txs.length > 0);
+
+  document.querySelectorAll('[data-approve-tx]').forEach(b => b.addEventListener('click', async () => {
+    const res = await EGDB.approveTransaction(b.dataset.approveTx);
+    if (!res.ok) { EGUI.toast(res.error, 'error'); return; }
+    EGUI.toast('تم اعتماد العملية');
+    refreshAll();
+  }));
+  document.querySelectorAll('[data-reject-tx]').forEach(b => b.addEventListener('click', async () => {
+    await EGDB.rejectTransaction(b.dataset.rejectTx);
+    EGUI.toast('تم رفض العملية');
+    refreshAll();
+  }));
+}
+
+async function refreshMembers() {
+  const members = await EGDB.listMembers();
+  document.getElementById('membersTableBody').innerHTML = members.map(m => `
+    <tr class="border-b border-outline-variant/20 text-body-sm">
+      <td class="py-gutter-xs">${EGUI.escapeHtml(m.memberId)}</td>
+      <td>${EGUI.escapeHtml(m.nickname)}</td>
+      <td>${EGUI.escapeHtml(m.username)}</td>
+      <td>${EGUI.escapeHtml(m.rank)}</td>
+      <td>${EGUI.formatNumber(m.balance)}</td>
+      <td>${m.status === 'active' ? '<span class="text-primary-container">مفعّل</span>' : '<span class="text-error">موقوف</span>'}</td>
+      <td class="flex gap-gutter-xs py-gutter-xs">
+        <button data-edit="${m.id}" class="text-secondary-fixed"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+        <button data-del="${m.id}" class="text-error"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+      </td>
+    </tr>`).join('');
+
+  document.querySelectorAll('[data-edit]').forEach(b => b.addEventListener('click', async () => {
+    const m = await EGDB.getMemberById(b.dataset.edit);
+    document.getElementById('memberModalTitle').textContent = 'تعديل بيانات العضو';
+    document.getElementById('editMemberDbId').value = m.id;
+    document.getElementById('fNickname').value = m.nickname;
+    document.getElementById('fUsername').value = m.username;
+    document.getElementById('fPassword').value = '';
+    document.getElementById('fMemberId').value = m.memberId;
+    document.getElementById('fRank').value = m.rank;
+    document.getElementById('fBalance').value = m.balance;
+    document.getElementById('fStatus').value = m.status;
+    openModal('memberModal');
+  }));
+  document.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', async () => {
+    if (!confirm('هل أنت متأكد من حذف هذا العضو؟')) return;
+    await EGDB.deleteMember(b.dataset.del);
+    EGUI.toast('تم حذف العضو');
+    refreshMembers();
+  }));
+}
+
+document.getElementById('openAddMember').addEventListener('click', () => {
+  document.getElementById('memberModalTitle').textContent = 'إضافة عضو جديد في البنك';
+  document.getElementById('memberForm').reset();
+  document.getElementById('editMemberDbId').value = '';
+  openModal('memberModal');
+});
+
+document.getElementById('memberForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const dbId = document.getElementById('editMemberDbId').value;
+  const data = {
+    nickname: document.getElementById('fNickname').value.trim(),
+    username: document.getElementById('fUsername').value.trim(),
+    memberId: document.getElementById('fMemberId').value.trim() || undefined,
+    rank: document.getElementById('fRank').value.trim(),
+    balance: Number(document.getElementById('fBalance').value) || 0,
+    status: document.getElementById('fStatus').value
+  };
+  const pw = document.getElementById('fPassword').value;
+  if (dbId) {
+    if (pw) data.password = pw;
+    await EGDB.updateMember(dbId, data);
+    EGUI.toast('تم تحديث بيانات العضو');
+  } else {
+    data.password = pw || '123456';
+    await EGDB.addMember(data);
+    EGUI.toast('تم إضافة العضو');
+  }
+  closeModal('memberModal');
+  refreshMembers();
+});
+
+async function refreshAll() {
+  await Promise.all([refreshRegistrations(), refreshTransactions(), refreshMembers()]);
+}
+if (session) refreshAll();
+</script>
+</body>
+</html>

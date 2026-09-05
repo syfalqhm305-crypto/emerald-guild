@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>طلب انضمام وتوثيق عضو — نقابة الزمرد</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link rel="stylesheet" href="shared/base.css"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="shared/tailwind-config.js"></script>
+</head>
+<body class="bg-background font-body-md text-on-surface antialiased min-h-screen flex items-center justify-center p-gutter-lg">
+
+<div class="w-full max-w-lg bg-surface-container/70 backdrop-blur-xl rounded-xl p-gutter-lg shadow-2xl border border-outline-variant/30">
+  <div class="flex items-center gap-gutter-sm mb-gutter-md">
+    <a href="index.html" class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">arrow_forward</span></a>
+    <h1 class="font-headline-lg text-headline-md text-primary">طلب انضمام وتوثيق عضو</h1>
+  </div>
+  <p class="font-body-md text-body-sm text-on-surface-variant mb-gutter-lg">
+    عبّئ البيانات التالية لإرسال طلب انضمامك. سيتم تفعيل حسابك بعد مراجعة إدارة البنك.
+  </p>
+
+  <form id="registerForm" class="flex flex-col gap-gutter-md">
+    <div>
+      <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">اللقب / الاسم داخل النقابة</label>
+      <input required id="regNickname" type="text" placeholder="مثال: ليدي أميرالد أو فالكون_٩٩"
+        class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary-container"/>
+    </div>
+    <div>
+      <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">اسم المستخدم لتسجيل الدخول</label>
+      <input required id="regUsername" type="text" placeholder="username"
+        class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary-container"/>
+    </div>
+    <div>
+      <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">البريد الإلكتروني (اختياري)</label>
+      <input id="regEmail" type="email" placeholder="falcon@emerald-vault.io"
+        class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary-container"/>
+    </div>
+    <div>
+      <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">كلمة المرور</label>
+      <input required id="regPassword" type="password" minlength="6" placeholder="6 خانات على الأقل"
+        class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary-container"/>
+    </div>
+    <div>
+      <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">تأكيد كلمة المرور</label>
+      <input required id="regPassword2" type="password" minlength="6" placeholder="أعد كتابة كلمة المرور"
+        class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary-container"/>
+    </div>
+    <button type="submit" class="w-full bg-primary-container text-on-primary-container font-headline-sm py-gutter-sm rounded-lg hover:bg-primary-fixed transition-colors shadow-[0_0_20px_rgba(0,245,184,0.3)]">
+      إرسال طلب الانضمام
+    </button>
+  </form>
+
+  <div id="successBox" class="eg-hidden mt-gutter-lg bg-primary-container/10 border border-primary-container/40 rounded-lg p-gutter-md text-center">
+    <span class="material-symbols-outlined text-primary-container text-[36px]">verified</span>
+    <p class="font-body-md text-body-md text-on-surface mt-gutter-xs">تم إرسال طلبك بنجاح، بانتظار موافقة إدارة البنك.</p>
+    <a href="index.html" class="inline-block mt-gutter-sm text-secondary-fixed hover:underline">العودة للرئيسية</a>
+  </div>
+</div>
+
+<script src="shared/db.js"></script>
+<script src="shared/ui.js"></script>
+<script>
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const nickname = document.getElementById('regNickname').value.trim();
+  const username = document.getElementById('regUsername').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value;
+  const password2 = document.getElementById('regPassword2').value;
+
+  if (password !== password2) {
+    EGUI.toast('كلمتا المرور غير متطابقتين', 'error');
+    return;
+  }
+  const members = await EGDB.listMembers();
+  if (members.some(m => m.username === username)) {
+    EGUI.toast('اسم المستخدم هذا مستخدم بالفعل', 'error');
+    return;
+  }
+
+  await EGDB.submitRegistration({ nickname, username, email, password });
+  document.getElementById('registerForm').classList.add('eg-hidden');
+  document.getElementById('successBox').classList.remove('eg-hidden');
+});
+</script>
+</body>
+</html>

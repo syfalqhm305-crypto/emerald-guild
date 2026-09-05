@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>سوق الزمرد الإمبراطوري — نقابة الزمرد</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link rel="stylesheet" href="shared/base.css"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="shared/tailwind-config.js"></script>
+</head>
+<body class="bg-background font-body-md text-on-surface antialiased">
+
+<header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.4)]">
+  <div class="h-16 w-full px-gutter-lg flex items-center justify-between gap-gutter-md">
+    <a href="index.html" class="flex items-center gap-gutter-xs text-primary font-headline-sm text-headline-sm">
+      <span class="material-symbols-outlined">diamond</span> نقابة الزمرد
+    </a>
+    <h1 class="font-headline-sm text-headline-sm text-on-surface hidden md:block">سوق الزمرد الإمبراطوري</h1>
+    <a href="index.html" class="text-body-sm text-on-surface-variant hover:text-on-surface">الرئيسية</a>
+  </div>
+</header>
+
+<main class="w-full pt-24 pb-gutter-xl max-w-4xl mx-auto px-gutter-lg flex flex-col gap-gutter-lg">
+  <p class="text-body-md text-on-surface-variant">تصفح واطلب أي سلعة مباشرة دون أي قيود أو تسجيل دخول.</p>
+
+  <div id="categoryFilterContainer" class="flex flex-wrap gap-gutter-xs"></div>
+
+  <div id="itemsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-gutter-md"></div>
+</main>
+
+<!-- مودال الطلب -->
+<div id="orderModal" class="eg-modal-backdrop eg-hidden">
+  <div class="w-full max-w-sm bg-surface-container-high rounded-xl p-gutter-lg shadow-2xl border border-outline-variant/40">
+    <div class="flex items-center justify-between mb-gutter-md">
+      <h3 class="font-headline-md text-headline-sm text-on-surface">تأكيد الطلب</h3>
+      <button data-close-modal="orderModal" class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <div id="selectedItemInfo" class="mb-gutter-md bg-surface-container-low rounded-lg p-gutter-sm">
+      <h4 id="selectedItemName" class="font-headline-sm text-body-lg text-on-surface"></h4>
+      <span id="selectedItemPrice" class="font-body-sm text-body-sm text-primary-container"></span>
+    </div>
+    <form id="orderForm" class="flex flex-col gap-gutter-md">
+      <input type="hidden" id="orderItemId"/>
+      <div>
+        <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">اسمك / لقبك</label>
+        <input required id="buyerName" type="text" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+      </div>
+      <div>
+        <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">رقم التواصل / أيدي العضوية</label>
+        <input required id="buyerContact" type="text" placeholder="واتساب أو #EMD-xxxx" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+      </div>
+      <button type="submit" class="w-full bg-primary-container text-on-primary-container font-headline-sm py-gutter-sm rounded-lg hover:bg-primary-fixed transition-colors">إرسال الطلب</button>
+    </form>
+    <div id="orderFeedback" class="eg-hidden mt-gutter-md text-center flex flex-col gap-gutter-sm">
+      <span class="material-symbols-outlined text-primary-container text-[36px]">verified</span>
+      <p class="text-body-md text-on-surface">تم إرسال طلبك برقم <b id="modalOrderCode"></b></p>
+      <button id="waSendBtn" class="w-full bg-primary-container text-on-primary-container font-headline-sm py-gutter-sm rounded-lg">إتمام عبر واتساب مع مسؤول المتجر</button>
+    </div>
+  </div>
+</div>
+
+<script src="shared/db.js"></script>
+<script src="shared/ui.js"></script>
+<script>
+function openModal(id){ document.getElementById(id).classList.remove('eg-hidden'); }
+function closeModal(id){ document.getElementById(id).classList.add('eg-hidden'); }
+document.querySelectorAll('[data-close-modal]').forEach(btn => btn.addEventListener('click', () => closeModal(btn.dataset.closeModal)));
+
+let allItems = [];
+let settings = null;
+let activeCategory = 'الكل';
+
+function renderCategories() {
+  const cats = ['الكل', ...new Set(allItems.map(i => i.category))];
+  document.getElementById('categoryFilterContainer').innerHTML = cats.map(c => `
+    <button data-cat="${EGUI.escapeHtml(c)}" class="cat-btn px-gutter-md py-1 rounded-full text-body-sm border ${c === activeCategory ? 'bg-primary-container text-on-primary-container border-primary-container' : 'bg-surface-container-low border-outline-variant/40 text-on-surface-variant'}">${EGUI.escapeHtml(c)}</button>
+  `).join('');
+  document.querySelectorAll('.cat-btn').forEach(b => b.addEventListener('click', () => { activeCategory = b.dataset.cat; renderCategories(); renderItems(); }));
+}
+
+function renderItems() {
+  const list = activeCategory === 'الكل' ? allItems : allItems.filter(i => i.category === activeCategory);
+  document.getElementById('itemsGrid').innerHTML = list.map(item => `
+    <div class="flex items-center justify-between p-3.5 rounded-2xl bg-surface-container/90 border border-primary-container/20 backdrop-blur-md">
+      <div class="flex items-center gap-gutter-sm">
+        <div class="w-14 h-14 rounded-xl bg-black/40 border border-primary-container/30 flex items-center justify-center overflow-hidden shrink-0">
+          ${item.image ? `<img src="${item.image}" class="w-full h-full object-cover"/>` : `<span class="material-symbols-outlined text-primary-container">redeem</span>`}
+        </div>
+        <div>
+          <span class="text-[10px] px-gutter-xs py-0.5 rounded-full bg-primary-container/10 text-primary-container font-bold">${EGUI.escapeHtml(item.category)}</span>
+          <h4 class="text-body-md font-bold text-on-surface mt-1">${EGUI.escapeHtml(item.name)}</h4>
+          <div class="flex items-center gap-gutter-xs mt-1">
+            ${item.priceEMD ? `<span class="text-body-sm font-black text-primary-container">${EGUI.formatNumber(item.priceEMD)} EMD</span>` : ''}
+            ${item.priceFiat ? `<span class="text-body-sm text-on-surface-variant">${item.priceEMD ? 'أو ' : ''}$${item.priceFiat} USD</span>` : ''}
+          </div>
+        </div>
+      </div>
+      <button data-id="${item.id}" class="order-btn px-gutter-md py-gutter-xs rounded-xl bg-primary-container text-on-primary-container text-body-sm font-extrabold">طلب فوري</button>
+    </div>`).join('');
+
+  document.querySelectorAll('.order-btn').forEach(b => b.addEventListener('click', () => selectItem(b.dataset.id)));
+}
+
+function selectItem(id) {
+  const item = allItems.find(i => i.id === id);
+  document.getElementById('orderItemId').value = item.id;
+  document.getElementById('selectedItemName').textContent = item.name;
+  document.getElementById('selectedItemPrice').textContent =
+    [item.priceEMD ? `${EGUI.formatNumber(item.priceEMD)} EMD` : '', item.priceFiat ? `$${item.priceFiat} USD` : ''].filter(Boolean).join(' / ');
+  document.getElementById('orderForm').classList.remove('eg-hidden');
+  document.getElementById('orderFeedback').classList.add('eg-hidden');
+  document.getElementById('orderForm').reset();
+  openModal('orderModal');
+}
+
+document.getElementById('orderForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const itemId = document.getElementById('orderItemId').value;
+  const item = allItems.find(i => i.id === itemId);
+  const buyerName = document.getElementById('buyerName').value.trim();
+  const buyerContact = document.getElementById('buyerContact').value.trim();
+
+  const order = await EGDB.placeOrder({ itemId, itemName: item.name, buyerName, buyerContact });
+
+  document.getElementById('modalOrderCode').textContent = order.orderCode;
+  document.getElementById('orderForm').classList.add('eg-hidden');
+  document.getElementById('orderFeedback').classList.remove('eg-hidden');
+
+  document.getElementById('waSendBtn').onclick = () => {
+    const msg = `طلب جديد من متجر النقابة\nالسلعة: ${item.name}\nكود الطلب: ${order.orderCode}\nالاسم: ${buyerName}\nللتواصل: ${buyerContact}`;
+    EGUI.openWhatsApp(settings.storeWhatsapp, msg);
+  };
+});
+
+async function init() {
+  settings = await EGDB.getSettings();
+  allItems = await EGDB.listStoreItems();
+  renderCategories();
+  renderItems();
+}
+init();
+</script>
+</body>
+</html>

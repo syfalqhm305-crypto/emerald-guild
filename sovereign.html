@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>لوحة القيادة العليا — نقابة الزمرد</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link rel="stylesheet" href="shared/base.css"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="shared/tailwind-config.js"></script>
+</head>
+<body class="bg-background font-body-md text-on-surface antialiased">
+
+<header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.4)]">
+  <div class="h-16 w-full px-gutter-lg flex items-center justify-between gap-gutter-md">
+    <a href="index.html" class="flex items-center gap-gutter-xs text-primary font-headline-sm text-headline-sm">
+      <span class="material-symbols-outlined">shield_lock</span> القيادة العليا
+    </a>
+    <button id="logoutBtn" class="flex items-center gap-gutter-xs text-on-surface-variant hover:text-on-surface text-body-sm">
+      <span class="material-symbols-outlined text-[18px]">logout</span> خروج
+    </button>
+  </div>
+</header>
+
+<main class="w-full pt-24 pb-gutter-xl max-w-3xl mx-auto px-gutter-lg flex flex-col gap-gutter-xl">
+
+  <!-- بيانات النقابة العامة -->
+  <section class="flex flex-col gap-gutter-md bg-surface-container/60 backdrop-blur-xl rounded-xl p-gutter-lg">
+    <h2 class="font-headline-md text-headline-md text-primary">بيانات الهوية والنقابة</h2>
+    <div>
+      <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">اسم النقابة</label>
+      <input id="sGuildName" type="text" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+    </div>
+    <div>
+      <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">الشعار النصي (Tagline)</label>
+      <input id="sTagline" type="text" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+    </div>
+    <div>
+      <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">نبذة عن النقابة</label>
+      <textarea id="sIntro" rows="3" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"></textarea>
+    </div>
+    <div>
+      <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">رابط لوجو النقابة (اختياري)</label>
+      <input id="sLogo" type="text" placeholder="https://..." class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+    </div>
+    <div>
+      <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">رصيد خزينة النقابة المعروض (للإحصائيات)</label>
+      <input id="sTreasury" type="number" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+    </div>
+  </section>
+
+  <!-- إدارة وتفويض مسؤولي البنك والمتجر -->
+  <section class="flex flex-col gap-gutter-md bg-surface-container/60 backdrop-blur-xl rounded-xl p-gutter-lg">
+    <h2 class="font-headline-md text-headline-md text-primary">إدارة وتفويض مسؤولي البنك والمتجر</h2>
+    <div>
+      <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">رقم واتساب مسؤول البنك</label>
+      <input id="bank-wa-input" type="text" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+    </div>
+    <div>
+      <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">كلمة مرور مسؤول البنك</label>
+      <input id="sBankPassword" type="text" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+    </div>
+    <div>
+      <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">رقم واتساب مسؤول المتجر</label>
+      <input id="market-wa-input" type="text" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+    </div>
+    <div>
+      <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">كلمة مرور مسؤول المتجر</label>
+      <input id="sStorePassword" type="text" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+    </div>
+  </section>
+
+  <!-- التحكم الشامل ببوابات النظام -->
+  <section class="flex flex-col gap-gutter-md bg-surface-container/60 backdrop-blur-xl rounded-xl p-gutter-lg">
+    <h2 class="font-headline-md text-headline-md text-primary">التحكم الشامل ببوابات النظام</h2>
+    <div>
+      <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">كلمة مرور قائدة النقابة (حسابك أنت)</label>
+      <input id="sSovereignPassword" type="text" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+    </div>
+    <div>
+      <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">نسبة العمولة على عمليات المتجر (%)</label>
+      <input id="commission-slider" type="range" min="0" max="30" class="w-full accent-primary-container"/>
+      <span class="text-body-sm text-primary-container" id="commission-display">0%</span>
+    </div>
+  </section>
+
+  <button id="saveAllBtn" class="w-full bg-primary-container text-on-primary-container font-headline-sm py-gutter-md rounded-lg hover:bg-primary-fixed transition-colors shadow-[0_0_20px_rgba(0,245,184,0.3)]">
+    حفظ جميع الإعدادات
+  </button>
+
+  <!-- سجل الحركات الحساسة -->
+  <section class="flex flex-col gap-gutter-sm">
+    <h2 class="font-headline-md text-headline-md text-primary">سجل الحركات الحساسة والأمان</h2>
+    <div id="logList" class="flex flex-col gap-gutter-xs"></div>
+  </section>
+</main>
+
+<script src="shared/db.js"></script>
+<script src="shared/auth.js"></script>
+<script src="shared/ui.js"></script>
+<script>
+const session = EGAuth.requireRole('sovereign', 'index.html');
+document.getElementById('logoutBtn').addEventListener('click', () => EGAuth.logout('index.html'));
+
+document.getElementById('commission-slider').addEventListener('input', (e) => {
+  document.getElementById('commission-display').textContent = e.target.value + '%';
+});
+
+async function loadSettings() {
+  const s = await EGDB.getSettings();
+  document.getElementById('sGuildName').value = s.guildName;
+  document.getElementById('sTagline').value = s.guildTagline;
+  document.getElementById('sIntro').value = s.guildIntro;
+  document.getElementById('sLogo').value = s.logoUrl;
+  document.getElementById('sTreasury').value = s.treasuryBalance;
+  document.getElementById('bank-wa-input').value = s.bankWhatsapp;
+  document.getElementById('sBankPassword').value = s.bankAdminPassword;
+  document.getElementById('market-wa-input').value = s.storeWhatsapp;
+  document.getElementById('sStorePassword').value = s.storeAdminPassword;
+  document.getElementById('sSovereignPassword').value = s.sovereignPassword;
+  document.getElementById('commission-slider').value = s.commissionRate;
+  document.getElementById('commission-display').textContent = s.commissionRate + '%';
+}
+
+async function loadLog() {
+  const txs = (await EGDB.listAllTransactions()).slice(0, 15);
+  const orders = (await EGDB.listOrders()).slice(0, 15);
+  const combined = [
+    ...txs.map(t => ({ date: t.date, text: `عملية ${t.type} بقيمة ${EGUI.formatNumber(t.amount)} EMD — الحالة: ${t.status}` })),
+    ...orders.map(o => ({ date: o.date, text: `طلب متجر «${o.itemName}» من ${o.buyerName} — الحالة: ${o.status}` }))
+  ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 20);
+
+  document.getElementById('logList').innerHTML = combined.map(l => `
+    <div class="flex items-center justify-between bg-surface-container-low rounded-lg p-gutter-sm">
+      <span class="text-body-sm text-on-surface">${EGUI.escapeHtml(l.text)}</span>
+      <span class="text-body-sm text-on-surface-variant">${new Date(l.date).toLocaleString('ar')}</span>
+    </div>`).join('') || '<p class="text-body-sm text-on-surface-variant">لا توجد حركات مسجلة بعد.</p>';
+}
+
+document.getElementById('saveAllBtn').addEventListener('click', async () => {
+  await EGDB.updateSettings({
+    guildName: document.getElementById('sGuildName').value.trim(),
+    guildTagline: document.getElementById('sTagline').value.trim(),
+    guildIntro: document.getElementById('sIntro').value.trim(),
+    logoUrl: document.getElementById('sLogo').value.trim(),
+    treasuryBalance: Number(document.getElementById('sTreasury').value) || 0,
+    bankWhatsapp: document.getElementById('bank-wa-input').value.trim(),
+    bankAdminPassword: document.getElementById('sBankPassword').value,
+    storeWhatsapp: document.getElementById('market-wa-input').value.trim(),
+    storeAdminPassword: document.getElementById('sStorePassword').value,
+    sovereignPassword: document.getElementById('sSovereignPassword').value,
+    commissionRate: Number(document.getElementById('commission-slider').value)
+  });
+  EGUI.toast('تم حفظ جميع الإعدادات بنجاح');
+});
+
+if (session) { loadSettings(); loadLog(); }
+</script>
+</body>
+</html>

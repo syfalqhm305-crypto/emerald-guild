@@ -1,0 +1,27 @@
+@layer base {
+  html, body { margin: 0; padding: 0; }
+  body { overscroll-behavior: none; }
+  main > :first-child { margin-top: 0 !important; }
+  main > :last-child { margin-bottom: 0 !important; }
+}
+::-webkit-scrollbar { display: none; }
+
+/* توست بسيط للإشعارات */
+.eg-toast {
+  position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: #161d1c; border: 1px solid rgba(0,245,184,0.35); color: #dde4e2;
+  padding: 0.75rem 1.25rem; border-radius: 0.75rem; font-size: 14px; z-index: 9999;
+  opacity: 0; transition: all .25s ease; box-shadow: 0 8px 32px rgba(0,0,0,.5); pointer-events: none;
+  max-width: 90vw; text-align: center;
+}
+.eg-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.eg-toast.error { border-color: rgba(239,68,68,0.5); }
+
+/* حالة تحميل بسيطة */
+.eg-hidden { display: none !important; }
+
+/* مودال عام */
+.eg-modal-backdrop {
+  position: fixed; inset: 0; background: rgba(5,11,10,0.75); backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center; z-index: 9998; padding: 1rem;
+}

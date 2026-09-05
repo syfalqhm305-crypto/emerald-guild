@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>إدارة مستودع ومتجر النقابة</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link rel="stylesheet" href="shared/base.css"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="shared/tailwind-config.js"></script>
+</head>
+<body class="bg-background font-body-md text-on-surface antialiased">
+
+<header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.4)]">
+  <div class="h-16 w-full px-gutter-lg flex items-center justify-between gap-gutter-md">
+    <a href="index.html" class="flex items-center gap-gutter-xs text-primary font-headline-sm text-headline-sm">
+      <span class="material-symbols-outlined">storefront</span> إدارة المتجر
+    </a>
+    <button id="logoutBtn" class="flex items-center gap-gutter-xs text-on-surface-variant hover:text-on-surface text-body-sm">
+      <span class="material-symbols-outlined text-[18px]">logout</span> خروج
+    </button>
+  </div>
+</header>
+
+<main class="w-full pt-24 pb-gutter-xl max-w-5xl mx-auto px-gutter-lg flex flex-col gap-gutter-xl">
+
+  <section class="flex flex-col gap-gutter-sm">
+    <h2 class="font-headline-md text-headline-md text-primary">إدارة طلبات المتجر الواردة</h2>
+    <div id="ordersList" class="flex flex-col gap-gutter-xs"></div>
+    <p id="ordersEmpty" class="text-body-sm text-on-surface-variant eg-hidden">لا توجد طلبات واردة.</p>
+  </section>
+
+  <section class="flex flex-col gap-gutter-sm">
+    <div class="flex items-center justify-between">
+      <h2 class="font-headline-md text-headline-md text-primary">السلع الحالية في المتجر</h2>
+      <button id="openAddItem" class="flex items-center gap-gutter-xs bg-primary-container text-on-primary-container font-headline-sm text-body-sm px-gutter-md py-gutter-xs rounded-lg">
+        <span class="material-symbols-outlined text-[18px]">add</span> إضافة سلعة
+      </button>
+    </div>
+    <div id="itemsList" class="grid grid-cols-1 sm:grid-cols-2 gap-gutter-sm"></div>
+  </section>
+</main>
+
+<!-- مودال إضافة / تعديل سلعة -->
+<div id="itemModal" class="eg-modal-backdrop eg-hidden">
+  <div class="w-full max-w-md bg-surface-container-high rounded-xl p-gutter-lg shadow-2xl border border-outline-variant/40">
+    <div class="flex items-center justify-between mb-gutter-md">
+      <h3 id="itemModalTitle" class="font-headline-md text-headline-sm text-on-surface">إضافة سلعة جديدة للمتجر</h3>
+      <button data-close-modal="itemModal" class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <form id="itemForm" class="grid grid-cols-1 sm:grid-cols-2 gap-gutter-md">
+      <input type="hidden" id="editItemId"/>
+      <div class="sm:col-span-2">
+        <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">اسم السلعة</label>
+        <input required id="iName" type="text" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+      </div>
+      <div>
+        <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">التصنيف</label>
+        <input id="iCategory" type="text" placeholder="رتب / شحن / عتاد" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+      </div>
+      <div>
+        <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">السعر EMD</label>
+        <input id="iPriceEmd" type="number" value="0" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+      </div>
+      <div>
+        <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">السعر $ (اختياري)</label>
+        <input id="iPriceFiat" type="number" value="0" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+      </div>
+      <div>
+        <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">رابط صورة (اختياري)</label>
+        <input id="iImage" type="text" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+      </div>
+      <div class="sm:col-span-2">
+        <label class="font-body-sm text-body-sm text-on-surface-variant mb-1 block">الوصف</label>
+        <input id="iDesc" type="text" class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg px-gutter-md py-gutter-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+      </div>
+      <button type="submit" class="sm:col-span-2 w-full bg-primary-container text-on-primary-container font-headline-sm py-gutter-sm rounded-lg hover:bg-primary-fixed transition-colors">حفظ</button>
+    </form>
+  </div>
+</div>
+
+<script src="shared/db.js"></script>
+<script src="shared/auth.js"></script>
+<script src="shared/ui.js"></script>
+<script>
+const session = EGAuth.requireRole('store', 'index.html');
+document.getElementById('logoutBtn').addEventListener('click', () => EGAuth.logout('index.html'));
+
+function openModal(id){ document.getElementById(id).classList.remove('eg-hidden'); }
+function closeModal(id){ document.getElementById(id).classList.add('eg-hidden'); }
+document.querySelectorAll('[data-close-modal]').forEach(btn => btn.addEventListener('click', () => closeModal(btn.dataset.closeModal)));
+
+function statusBadge(status) {
+  const map = {
+    pending: '<span class="text-body-sm px-gutter-sm py-1 rounded-full bg-[#f5b041]/10 text-[#f5b041] border border-[#f5b041]/30">قيد المراجعة</span>',
+    approved: '<span class="text-body-sm px-gutter-sm py-1 rounded-full bg-primary-container/10 text-primary-container border border-primary-container/30">مقبول</span>',
+    rejected: '<span class="text-body-sm px-gutter-sm py-1 rounded-full bg-error/10 text-error border border-error/30">مرفوض</span>'
+  };
+  return map[status] || status;
+}
+
+async function refreshOrders() {
+  const orders = await EGDB.listOrders();
+  document.getElementById('ordersList').innerHTML = orders.map(o => `
+    <div class="flex items-center justify-between bg-surface-container-low rounded-lg p-gutter-sm">
+      <div class="flex flex-col">
+        <span class="font-body-md text-body-md text-on-surface">${EGUI.escapeHtml(o.itemName)} <span class="text-on-surface-variant text-body-sm">#${o.orderCode}</span></span>
+        <span class="font-body-sm text-body-sm text-on-surface-variant">${EGUI.escapeHtml(o.buyerName)} — ${EGUI.escapeHtml(o.buyerContact)} — ${new Date(o.date).toLocaleString('ar')}</span>
+      </div>
+      <div class="flex items-center gap-gutter-xs">
+        ${o.status === 'pending' ? `
+          <button data-approve-order="${o.id}" class="px-gutter-sm py-1 rounded-lg bg-primary-container text-on-primary-container text-body-sm">قبول</button>
+          <button data-reject-order="${o.id}" class="px-gutter-sm py-1 rounded-lg bg-error/20 text-error text-body-sm">رفض</button>
+        ` : statusBadge(o.status)}
+      </div>
+    </div>`).join('');
+  document.getElementById('ordersEmpty').classList.toggle('eg-hidden', orders.length > 0);
+
+  document.querySelectorAll('[data-approve-order]').forEach(b => b.addEventListener('click', async () => {
+    await EGDB.approveOrder(b.dataset.approveOrder);
+    EGUI.toast('تم قبول الطلب');
+    refreshOrders();
+  }));
+  document.querySelectorAll('[data-reject-order]').forEach(b => b.addEventListener('click', async () => {
+    await EGDB.rejectOrder(b.dataset.rejectOrder);
+    EGUI.toast('تم رفض الطلب');
+    refreshOrders();
+  }));
+}
+
+async function refreshItems() {
+  const items = await EGDB.listStoreItems();
+  document.getElementById('itemsList').innerHTML = items.map(i => `
+    <div class="flex items-center justify-between p-gutter-sm rounded-xl bg-surface-container-low border border-outline-variant/30">
+      <div class="flex flex-col">
+        <span class="text-body-sm text-primary-container">${EGUI.escapeHtml(i.category)}</span>
+        <span class="font-body-md text-body-md text-on-surface">${EGUI.escapeHtml(i.name)}</span>
+        <span class="text-body-sm text-on-surface-variant">${i.priceEMD ? EGUI.formatNumber(i.priceEMD) + ' EMD' : ''} ${i.priceFiat ? '/ $' + i.priceFiat : ''}</span>
+      </div>
+      <div class="flex gap-gutter-xs">
+        <button data-edit-item="${i.id}" class="text-secondary-fixed"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+        <button data-del-item="${i.id}" class="text-error"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+      </div>
+    </div>`).join('');
+
+  document.querySelectorAll('[data-edit-item]').forEach(b => b.addEventListener('click', async () => {
+    const items2 = await EGDB.listStoreItems();
+    const it = items2.find(x => x.id === b.dataset.editItem);
+    document.getElementById('itemModalTitle').textContent = 'تعديل السلعة';
+    document.getElementById('editItemId').value = it.id;
+    document.getElementById('iName').value = it.name;
+    document.getElementById('iCategory').value = it.category;
+    document.getElementById('iPriceEmd').value = it.priceEMD;
+    document.getElementById('iPriceFiat').value = it.priceFiat;
+    document.getElementById('iImage').value = it.image;
+    document.getElementById('iDesc').value = it.description;
+    openModal('itemModal');
+  }));
+  document.querySelectorAll('[data-del-item]').forEach(b => b.addEventListener('click', async () => {
+    if (!confirm('هل تريد حذف هذه السلعة؟')) return;
+    await EGDB.deleteStoreItem(b.dataset.delItem);
+    EGUI.toast('تم حذف السلعة');
+    refreshItems();
+  }));
+}
+
+document.getElementById('openAddItem').addEventListener('click', () => {
+  document.getElementById('itemModalTitle').textContent = 'إضافة سلعة جديدة للمتجر';
+  document.getElementById('itemForm').reset();
+  document.getElementById('editItemId').value = '';
+  openModal('itemModal');
+});
+
+document.getElementById('itemForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const id = document.getElementById('editItemId').value;
+  const data = {
+    name: document.getElementById('iName').value.trim(),
+    category: document.getElementById('iCategory').value.trim() || 'عام',
+    priceEMD: Number(document.getElementById('iPriceEmd').value) || 0,
+    priceFiat: Number(document.getElementById('iPriceFiat').value) || 0,
+    image: document.getElementById('iImage').value.trim(),
+    description: document.getElementById('iDesc').value.trim()
+  };
+  if (id) { await EGDB.updateStoreItem(id, data); EGUI.toast('تم تحديث السلعة'); }
+  else { await EGDB.addStoreItem(data); EGUI.toast('تم إضافة السلعة'); }
+  closeModal('itemModal');
+  refreshItems();
+});
+
+if (session) { refreshOrders(); refreshItems(); }
+</script>
+</body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>متجر النقابة | Emerald Store</title>
+<link rel="icon" href="assets/logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="css/style.css?v=3">
+<style>
+  .prod-card{ padding:0; overflow:hidden; transition:transform .25s ease, box-shadow .25s ease; }
+  .prod-card:active{ transform:scale(.97); }
+  .prod-img{ height:120px; background:linear-gradient(135deg,var(--card-2),var(--card)); display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+  .prod-img::after{ content:""; position:absolute; inset:0; background:radial-gradient(circle at 30% 20%, rgba(45,212,191,.25), transparent 65%); }
+  .prod-img img{ width:100%; height:100%; object-fit:cover; position:relative; z-index:1; }
+  .prod-img i{ font-size:36px; color:var(--accent); opacity:.6; filter:drop-shadow(0 0 10px rgba(45,212,191,.5)); position:relative; z-index:1; }
+  .prod-cat{ position:absolute; top:8px; right:8px; z-index:2; }
+  .prod-body{ padding:14px; }
+  .prod-name{ font-weight:800; font-size:14px; margin-bottom:4px; }
+  .prod-desc{ font-size:11.5px; color:var(--text-dim); margin-bottom:10px; min-height:30px; }
+  .prod-foot{ display:flex; align-items:center; justify-content:space-between; }
+  .prod-price{ font-weight:900; color:var(--accent); font-size:15px; text-shadow:0 0 12px rgba(45,212,191,.3); }
+  .prod-price small{ color:var(--text-dim); font-weight:600; font-size:10px; }
+  .cat-filters{ display:flex; gap:8px; overflow-x:auto; padding:0 0 6px; margin-bottom:14px; scrollbar-width:none;}
+  .cat-filters::-webkit-scrollbar{display:none;}
+  .cat-chip{ flex-shrink:0; padding:7px 14px; border-radius:20px; background:var(--card); border:1px solid var(--border); font-size:12px; font-weight:700; color:var(--text-dim); cursor:pointer; transition:.2s; }
+  .cat-chip.active{ background:linear-gradient(135deg,var(--accent-2),var(--accent-dim)); color:#022b23; border-color:transparent; box-shadow:0 4px 14px rgba(45,212,191,.35); }
+</style>
+</head>
+<body>
+
+<div class="wrap" id="app">
+  <div class="topbar">
+    <a href="index.html" class="brand" style="text-decoration:none;">
+      <div class="logo-frame sm"><img src="assets/logo.png" alt="logo"></div>
+      <div><div class="name">متجر النقابة</div><div class="sub">EMERALD STORE</div></div>
+    </a>
+    <div id="topRightSlot"></div>
+  </div>
+  <div id="content"></div>
+</div>
+
+<script src="js/db.js?v=3"></script>
+<script src="js/main.js?v=3"></script>
+<script>
+const session = Session.get();
+const isAdmin = session && session.role==="storeAdmin";
+let currentCat = "الكل";
+
+function topRight(){
+  const slot = document.getElementById("topRightSlot");
+  if(isAdmin){
+    slot.innerHTML = `<button class="btn btn-ghost btn-sm" onclick="Session.clear();location.reload()"><i class="fa-solid fa-right-from-bracket"></i></button>`;
+  } else {
+    slot.innerHTML = `<button class="btn btn-outline btn-sm" onclick="openModal('storeAdminModal')"><i class="fa-solid fa-user-shield"></i> مسؤول المتجر</button>`;
+  }
+}
+
+async function renderStore(){
+  topRight();
+  const c = document.getElementById("content");
+  if(isAdmin){ renderAdminStore(); return; }
+
+  const products = await DB.getProducts();
+  const cats = ["الكل", ...new Set(products.map(p=>p.category))];
+  c.innerHTML = `
+    <div style="padding:16px;">
+      <div class="cat-filters" id="catFilters">${cats.map(cat=>`<div class="cat-chip ${cat===currentCat?'active':''}" data-c="${cat}">${cat}</div>`).join("")}</div>
+      <div id="prodGrid" class="stagger" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;"></div>
+    </div>`;
+  document.querySelectorAll(".cat-chip").forEach(ch=>{
+    ch.onclick=()=>{ currentCat=ch.dataset.c; renderStore(); };
+  });
+  paintProducts(products);
+}
+function paintProducts(products){
+  const grid = document.getElementById("prodGrid");
+  const list = currentCat==="الكل"? products.filter(p=>p.active) : products.filter(p=>p.active && p.category===currentCat);
+  grid.innerHTML = list.length? list.map(p=>`
+    <div class="card prod-card">
+      <div class="prod-img">
+        ${p.image? `<img src="${p.image}">` : `<i class="fa-solid fa-gem"></i>`}
+        <span class="prod-cat badge badge-teal">${p.category}</span>
+      </div>
+      <div class="prod-body">
+        <div class="prod-name">${p.name}</div>
+        <div class="prod-desc">${p.desc||""}</div>
+        <div class="prod-foot">
+          <div class="prod-price">${fmtMoney(p.priceEMD)} <small>EMD</small></div>
+          <button class="btn btn-primary btn-sm" onclick='openBuyModal(${JSON.stringify(p).replace(/'/g,"&#39;")})'><i class="fa-solid fa-cart-plus"></i></button>
+        </div>
+        ${!p.unlimited? `<div class="hint mt8">متبقي: ${p.qty}</div>`:""}
+      </div>
+    </div>`).join("") : `<div class="empty-state" style="grid-column:1/3;"><i class="fa-solid fa-box-open"></i>لا توجد منتجات في هذا القسم</div>`;
+}
+
+function openBuyModal(p){
+  let wrap = document.getElementById("buyModal"); if(wrap) wrap.remove();
+  wrap = document.createElement("div"); wrap.className="modal-bg show"; wrap.id="buyModal";
+  wrap.innerHTML = `<div class="modal">
+    <div class="modal-head"><h3><i class="fa-solid fa-cart-shopping"></i> تأكيد الشراء</h3><button class="modal-close" onclick="document.getElementById('buyModal').remove()"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="card" style="margin-bottom:16px;">
+      <div style="font-weight:800;">${p.name}</div>
+      <div class="muted" style="font-size:12px;">${p.desc||""}</div>
+      <div class="mt8" style="font-weight:900;color:var(--accent);">${fmtMoney(p.priceEMD)} EMD</div>
+    </div>
+    <div class="field"><label>الكمية</label><input id="buyQty" type="number" value="1" min="1" ${p.unlimited?'':`max="${p.qty}"`}></div>
+    <div class="divider"></div>
+    <div class="muted" style="font-size:12px;margin-bottom:10px;">أدخل بيانات حسابك في البنك لتأكيد الشراء</div>
+    <div class="field"><label>الآيدي</label><input id="buyId" placeholder="ID#"></div>
+    <div class="field"><label>اللقب</label><input id="buyTitle" placeholder="لقبك"></div>
+    <div class="field"><label>كلمة المرور</label>
+      <div class="pw-wrap"><input type="password" id="buyPass" placeholder="كلمة المرور"><i class="fa-solid fa-eye" onclick="togglePw('buyPass',this)"></i></div>
+    </div>
+    <button class="btn btn-primary btn-block" onclick='confirmPurchase(${JSON.stringify(p).replace(/'/g,"&#39;")})'><i class="fa-solid fa-check"></i> تأكيد الشراء وإرسال الطلب</button>
+    <div class="hint center mt12">سيتم إرسال طلبك لمراجعة المسؤول ثم خصم المبلغ تلقائيًا عند القبول</div>
+  </div>`;
+  document.body.appendChild(wrap); Sound.open();
+}
+
+async function confirmPurchase(p){
+  const qty = Number(document.getElementById("buyQty").value)||1;
+  const id = document.getElementById("buyId").value.trim();
+  const title = document.getElementById("buyTitle").value.trim();
+  const pass = document.getElementById("buyPass").value;
+  if(!id||!title||!pass){ toast("أكمل بيانات الحساب","error"); return; }
+  const member = await DB.verifyMember(id,title,pass);
+  if(!member){ toast("بيانات الحساب غير صحيحة","error"); return; }
+  if(!p.unlimited && qty>p.qty){ toast("الكمية المتاحة غير كافية","error"); return; }
+  const total = p.priceEMD*qty;
+  await DB.createOrder({ memberId:id, productId:p.id, productName:p.name, qty, totalEMD: total });
+  document.getElementById("buyModal").remove();
+  toast("تم إرسال طلب الشراء، بانتظار اعتماد المسؤول","success");
+
+  DB.getAdmins().then(a=>{
+    if(a.bank.whatsapp){
+      const msg = `طلب شراء جديد من المتجر\nالعضو: ${title} #${id}\nالمنتج: ${p.name} × ${qty}\nالإجمالي: ${total} EMD\nيرجى المراجعة والاعتماد.`;
+      // فتح واتساب اختياري لتنبيه المسؤول فورًا
+      window.open(waLink(a.bank.whatsapp, msg), "_blank");
+    }
+  });
+}
+
+/* ---------------- STORE ADMIN ---------------- */
+async function doStoreAdminLogin(){
+  const pw = document.getElementById("storeAdminPw").value;
+  const ok = await DB.verifyStoreAdmin(pw);
+  if(!ok){ toast("كلمة مرور خاطئة","error"); return; }
+  Session.set("storeAdmin",{});
+  closeModal("storeAdminModal");
+  toast("مرحبًا بك يا مسؤول المتجر","success");
+  location.reload();
+}
+
+let storeAdminTab = "orders";
+async function renderAdminStore(){
+  const c = document.getElementById("content");
+  c.innerHTML = `
+  <div style="padding:16px;">
+    <div class="tabs" id="saTabs">
+      <div class="tab" data-t="orders">طلبات الشراء</div>
+      <div class="tab" data-t="products">إدارة المنتجات</div>
+      <div class="tab" data-t="add">إضافة منتج</div>
+    </div>
+    <div id="saBody"></div>
+  </div>`;
+  document.querySelectorAll("#saTabs .tab").forEach(t=> t.onclick = ()=>{ storeAdminTab=t.dataset.t; paintSaTabs(); renderSaBody(); });
+  paintSaTabs(); renderSaBody();
+}
+function paintSaTabs(){ document.querySelectorAll("#saTabs .tab").forEach(t=>t.classList.toggle("active", t.dataset.t===storeAdminTab)); }
+
+async function renderSaBody(){
+  const body = document.getElementById("saBody");
+  if(storeAdminTab==="orders"){
+    const orders = await DB.getOrders();
+    body.innerHTML = orders.length? orders.map(o=>`
+      <div class="card">
+        <div class="flex-between"><span class="badge ${o.status==='pending'?'badge-gold':o.status==='approved'?'badge-green':'badge-red'}">${o.status==='pending'?'قيد المراجعة':o.status==='approved'?'مقبول':'مرفوض'}</span><span class="muted" style="font-size:10px;">${fmtDate(o.createdAt)}</span></div>
+        <div class="mt8" style="font-weight:800;">${o.productName} × ${o.qty}</div>
+        <div class="muted" style="font-size:12px;">عضو #${o.memberId} · ${fmtMoney(o.totalEMD)} EMD</div>
+        ${o.status==='pending'? `<div class="flex gap10 mt12">
+          <button class="btn btn-danger btn-block btn-sm" onclick="saDecide('${o.id}',false)">رفض</button>
+          <button class="btn btn-primary btn-block btn-sm" onclick="saDecide('${o.id}',true)">قبول وخصم المبلغ</button>
+        </div>`:""}
+      </div>`).join("") : emptyBoxSA("لا توجد طلبات بعد");
+    return;
+  }
+  if(storeAdminTab==="products"){
+    const products = await DB.getProducts();
+    body.innerHTML = products.map(p=>`
+      <div class="card">
+        <div class="flex-between">
+          <div>
+            <div style="font-weight:800;">${p.name}</div>
+            <div class="muted" style="font-size:11.5px;">${p.category} · ${fmtMoney(p.priceEMD)} EMD ${p.unlimited?'· غير محدود':'· متبقي '+p.qty}</div>
+          </div>
+          <label class="flex gap8" style="font-size:11px;">
+            <input type="checkbox" ${p.active?'checked':''} onchange="toggleProduct('${p.id}',this.checked)"> نشط
+          </label>
+        </div>
+        <div class="flex gap10 mt12">
+          <button class="btn btn-outline btn-block btn-sm" onclick="editStock('${p.id}',${p.qty})"><i class="fa-solid fa-boxes-stacked"></i> تعديل الكمية</button>
+          <button class="btn btn-danger btn-block btn-sm" onclick="removeProduct('${p.id}')"><i class="fa-solid fa-trash"></i> حذف</button>
+        </div>
+      </div>`).join("");
+    return;
+  }
+  if(storeAdminTab==="add"){
+    body.innerHTML = `
+    <div class="card">
+      <div class="field"><label>اسم المنتج</label><input id="pName" placeholder="مثال: رتبة أسطورية"></div>
+      <div class="field"><label>التصنيف</label><input id="pCat" placeholder="رتب / أوسمة / سيولة..."></div>
+      <div class="field"><label>الوصف</label><textarea id="pDesc" rows="2" placeholder="وصف مختصر"></textarea></div>
+      <div class="grid-2">
+        <div class="field"><label>السعر EMD</label><input id="pPrice" type="number" placeholder="1000"></div>
+        <div class="field"><label>الكمية</label><input id="pQty" type="number" placeholder="10"></div>
+      </div>
+      <div class="field"><label>رابط صورة (اختياري)</label><input id="pImg" placeholder="https://..."></div>
+      <label class="flex gap8" style="font-size:12px;margin-bottom:14px;"><input type="checkbox" id="pUnlimited"> كمية غير محدودة</label>
+      <button class="btn btn-primary btn-block" onclick="submitProduct()"><i class="fa-solid fa-plus"></i> نشر المنتج بالمتجر</button>
+    </div>`;
+  }
+}
+function emptyBoxSA(m){ return `<div class="empty-state"><i class="fa-solid fa-inbox"></i>${m}</div>`; }
+
+async function saDecide(id, approve){
+  const order = (await DB.getOrders()).find(o=>o.id===id);
+  const res = await DB.decideOrder(id, approve, "مسؤول المتجر");
+  if(res && res.ok===false){ toast(res.msg,"error"); renderSaBody(); return; }
+  Sound.coin();
+  toast(approve?"تم القبول وخصم المبلغ من حساب العضو":"تم رفض الطلب", approve?"success":"info");
+  if(approve && order){
+    const member = await DB.getMember(order.memberId);
+    if(member && member.whatsapp) window.open(waLink(member.whatsapp, `تم قبول طلب شرائك: ${order.productName} × ${order.qty}\nتم خصم ${order.totalEMD} EMD من رصيدك.`), "_blank");
+  }
+  renderSaBody();
+}
+async function toggleProduct(id, active){ await DB.updateProduct(id,{active}); toast(active?"تم تفعيل المنتج":"تم إخفاء المنتج","info"); }
+async function removeProduct(id){
+  confirmAction("هل أنت متأكد من حذف هذا المنتج نهائيًا؟", async ()=>{
+    await DB.deleteProduct(id); toast("تم الحذف","success"); renderSaBody();
+  });
+}
+function editStock(id, current){
+  const val = prompt("الكمية الجديدة المتوفرة:", current);
+  if(val===null) return;
+  DB.updateProduct(id,{qty:Number(val)||0}).then(()=>{ toast("تم تحديث الكمية","success"); renderSaBody(); });
+}
+async function submitProduct(){
+  const name=document.getElementById("pName").value.trim();
+  const category=document.getElementById("pCat").value.trim()||"عام";
+  const desc=document.getElementById("pDesc").value.trim();
+  const priceEMD=Number(document.getElementById("pPrice").value);
+  const qty=Number(document.getElementById("pQty").value)||0;
+  const image=document.getElementById("pImg").value.trim();
+  const unlimited=document.getElementById("pUnlimited").checked;
+  if(!name||!priceEMD){ toast("أكمل اسم المنتج والسعر","error"); return; }
+  await DB.addProduct({name,category,desc,priceEMD,qty,image,unlimited});
+  toast("تمت إضافة المنتج بنجاح","success");
+  storeAdminTab="products"; renderAdminStore();
+}
+
+renderStore();
+</script>
+
+<!-- Store Admin Login Modal -->
+<div class="modal-bg" id="storeAdminModal">
+  <div class="modal">
+    <div class="modal-head"><h3><i class="fa-solid fa-user-shield"></i> دخول مسؤول المتجر</h3><button class="modal-close" onclick="closeModal('storeAdminModal')"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="field"><label>كلمة المرور</label>
+      <div class="pw-wrap"><input type="password" id="storeAdminPw" placeholder="كلمة مرور مسؤول المتجر"><i class="fa-solid fa-eye" onclick="togglePw('storeAdminPw',this)"></i></div>
+    </div>
+    <button class="btn btn-primary btn-block" onclick="doStoreAdminLogin()"><i class="fa-solid fa-right-to-bracket"></i> دخول</button>
+  </div>
+</div>
+</body>
+</html>

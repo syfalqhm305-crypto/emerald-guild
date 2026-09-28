@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>نقابة إميرالد | Emerald Guild</title>
+<link rel="icon" href="assets/logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="css/style.css?v=3">
+<style>
+  .hero{ text-align:center; padding:34px 10px 10px; }
+  .hero .logo-frame{ animation:heroFloat 4s ease-in-out infinite; }
+  @keyframes heroFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+  .hero h1{font-size:24px; font-weight:900; margin-top:14px; background:linear-gradient(135deg,#eafaf5,var(--accent)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;}
+  .hero .tag{font-size:12px; color:var(--text-dim); margin-top:4px;}
+  .quick-links{display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:0 16px; margin-top:20px;}
+  .qlink{
+    background:linear-gradient(160deg, var(--card-2), var(--card)); border:1px solid var(--border);
+    border-radius:16px; padding:20px 12px; text-align:center; text-decoration:none; color:var(--text);
+    transition:.25s; position:relative; overflow:hidden;
+  }
+  .qlink:active{transform:scale(.97);}
+  .qlink i{font-size:26px; color:var(--accent); margin-bottom:8px; display:block;}
+  .qlink .t{font-weight:800; font-size:14px;}
+  .qlink .s{font-size:10px; color:var(--text-dim); margin-top:2px;}
+  .lead-card{display:flex; align-items:center; gap:12px; padding:16px;}
+  .lead-avatar{width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--gold); background:var(--card-2); flex-shrink:0;}
+  .crown{color:var(--gold);}
+  .deputy-row{display:flex; align-items:center; gap:10px; padding:10px 0; border-top:1px solid var(--border);}
+  .deputy-row .av{width:38px;height:38px;border-radius:50%;object-fit:cover;background:var(--card-2);border:1.5px solid var(--border-strong);}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo-frame sm"><img src="assets/logo.png" alt="logo"></div>
+      <div>
+        <div class="name" id="guildNameTop">نقابة إميرالد</div>
+        <div class="sub">EMERALD GUILD</div>
+      </div>
+    </div>
+    <button class="btn btn-outline btn-sm" onclick="openModal('leaderLoginModal')">
+      <i class="fa-solid fa-crown"></i> دخول القائد
+    </button>
+  </div>
+
+  <div class="hero">
+    <div class="logo-frame xl" style="margin:0 auto;"><img src="assets/logo.png" alt="logo"></div>
+    <h1 id="guildNameHero">نقابة إميرالد</h1>
+    <div class="tag" id="guildTagline">القوة والولاء تحت راية الزمرد</div>
+  </div>
+
+  <div class="grid-4 stagger" style="padding:0 16px; margin-top:22px;">
+    <div class="stat"><i class="fa-solid fa-users"></i><div class="val count-up" id="statMembers">0</div><div class="lbl">الأعضاء</div></div>
+    <div class="stat"><i class="fa-solid fa-vault"></i><div class="val count-up" id="statTreasury">0</div><div class="lbl">الخزينة EMD</div></div>
+    <div class="stat"><i class="fa-solid fa-arrow-right-arrow-left"></i><div class="val count-up" id="statTx">0</div><div class="lbl">المعاملات</div></div>
+    <div class="stat"><i class="fa-solid fa-trophy"></i><div class="val">#1</div><div class="lbl">التصنيف</div></div>
+  </div>
+
+  <div class="quick-links">
+    <a href="bank.html" class="qlink"><i class="fa-solid fa-building-columns"></i><div class="t">بنك النقابة</div><div class="s">دخول الأعضاء والمسؤول</div></a>
+    <a href="store.html" class="qlink"><i class="fa-solid fa-shop"></i><div class="t">متجر النقابة</div><div class="s">تصفح وشراء مفتوح للجميع</div></a>
+  </div>
+
+  <div class="section-title" style="padding:0 16px;"><i class="fa-solid fa-shield-halved"></i> مجلس القيادة العليا</div>
+  <div style="padding:0 16px;">
+    <div class="card glow lead-card">
+      <img class="lead-avatar" id="leaderAvatar" src="" alt="">
+      <div>
+        <div class="badge badge-gold"><i class="fa-solid fa-crown crown"></i> القائد الأعلى</div>
+        <div style="font-weight:800; font-size:15px; margin-top:5px;" id="leaderName">—</div>
+        <div class="muted" id="leaderId">—</div>
+      </div>
+    </div>
+
+    <div class="card" id="deputiesCard">
+      <div class="card-title"><i class="fa-solid fa-user-shield"></i> النواب والمسؤولون</div>
+      <div id="deputiesList"><div class="muted center" style="padding:10px;">لا يوجد نواب معيّنون حاليًا</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-circle-info"></i> عن النقابة</div>
+      <div class="muted" style="font-size:13px; line-height:1.9;">
+        نقابة إميرالد منصة مركزية موحّدة لإدارة اقتصاد النقابة: بنك رسمي بحسابات مستقلة للأعضاء،
+        ومتجر سيادي مرتبط مباشرة بالبنك بحيث تُخصم المشتريات تلقائيًا من رصيدك بعد اعتماد الطلب.
+      </div>
+    </div>
+  </div>
+
+  <div style="height:20px"></div>
+</div>
+
+<!-- Leader Login Modal -->
+<div class="modal-bg" id="leaderLoginModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3><i class="fa-solid fa-crown"></i> دخول القيادة العليا</h3>
+      <button class="modal-close" onclick="closeModal('leaderLoginModal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="field">
+      <label><i class="fa-solid fa-lock"></i> كلمة مرور القائد / النائب</label>
+      <div class="pw-wrap">
+        <input type="password" id="leaderPwInput" placeholder="أدخل كلمة المرور">
+        <i class="fa-solid fa-eye" onclick="togglePw('leaderPwInput', this)"></i>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-block" onclick="doLeaderLogin()"><i class="fa-solid fa-right-to-bracket"></i> دخول لوحة التحكم</button>
+    <div class="hint center mt12">دخول القائد أو أحد النواب المعيّنين فقط</div>
+    <div class="hint center" id="defaultPwHint" style="margin-top:4px;opacity:.7;"></div>
+  </div>
+</div>
+
+<script src="js/db.js?v=3"></script>
+<script src="js/main.js?v=3"></script>
+<script>
+async function loadHome(){
+ try{
+  const g = await DB.getGuild();
+  if(g.leaderPassword === "leader123"){
+    document.getElementById("defaultPwHint").textContent = "كلمة المرور الافتراضية للتجربة: leader123 (غيّرها من الإعدادات بعد أول دخول)";
+  }
+  document.getElementById("guildNameTop").textContent = g.name;
+  document.getElementById("guildNameHero").textContent = g.name;
+  document.getElementById("guildTagline").textContent = g.tagline;
+  document.getElementById("leaderName").textContent = g.leaderName;
+  document.getElementById("leaderId").textContent = "#"+g.leaderId;
+  document.getElementById("leaderAvatar").src = g.leaderAvatar || g.logo;
+
+  const stats = await DB.getStats();
+  countUp(document.getElementById("statMembers"), stats.membersCount);
+  countUp(document.getElementById("statTreasury"), stats.treasury);
+  countUp(document.getElementById("statTx"), stats.transactionsCount);
+
+  const deps = await DB.getDeputies();
+  const list = document.getElementById("deputiesList");
+  if(deps.length){
+    list.innerHTML = deps.map(d=>`
+      <div class="deputy-row">
+        <img class="av" src="${d.avatar || g.logo}">
+        <div style="flex:1">
+          <div style="font-weight:700; font-size:13.5px;">${d.name}</div>
+          <div class="muted" style="font-size:11px;">${d.role}</div>
+        </div>
+        ${d.whatsapp ? `<a class="iconbtn" href="${waLink(d.whatsapp,'تحية طيبة يا '+d.name)}" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>` : ""}
+      </div>`).join("");
+  }
+ }catch(e){ console.error(e); toast("حدث خطأ أثناء تحميل بيانات النقابة: "+e.message,"error"); }
+}
+
+async function doLeaderLogin(){
+ try{
+  const pw = document.getElementById("leaderPwInput").value.trim();
+  if(!pw){ toast("أدخل كلمة المرور","error"); return; }
+  const isLeader = await DB.verifyLeader(pw);
+  if(isLeader){
+    Session.set("leader", {name:(await DB.getGuild()).leaderName});
+    toast("مرحبًا بعودتك أيها القائد","success");
+    setTimeout(()=>location.href="leader.html", 500);
+    return;
+  }
+  const dep = await DB.verifyDeputy(pw);
+  if(dep){
+    Session.set("deputy", {id:dep.id, name:dep.name});
+    toast("تم التحقق، مرحبًا "+dep.name,"success");
+    setTimeout(()=>location.href="leader.html", 500);
+    return;
+  }
+  toast("كلمة المرور غير صحيحة","error");
+ }catch(e){ console.error(e); toast("خطأ غير متوقع: "+e.message,"error"); }
+}
+loadHome();
+if(new URLSearchParams(location.search).get("authRequired")){
+  toast("تحتاج تسجيل الدخول أولًا للوصول لهذه الصفحة","info");
+  history.replaceState(null,"",location.pathname);
+}
+</script>
+</body>
+</html>

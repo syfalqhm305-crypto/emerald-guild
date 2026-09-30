@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>لوحة القيادة العليا | Emerald Command</title>
+<link rel="icon" href="assets/logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="css/style.css?v=5">
+<style>
+  .lead-hero{ text-align:center; padding:10px 0 6px; }
+  .lead-hero img{ width:60px; filter:drop-shadow(0 0 20px var(--accent)); }
+  .danger-box{ border:1px solid rgba(255,92,92,.4); background:rgba(255,92,92,.07); border-radius:14px; padding:16px; }
+</style>
+</head>
+<body>
+
+<div class="wrap" id="app">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo-frame sm"><img src="assets/logo.png" alt="logo"></div>
+      <div><div class="name">لوحة القيادة العليا</div><div class="sub">SOVEREIGN COMMAND</div></div>
+    </div>
+    <button class="btn btn-ghost btn-sm" id="logoutBtn" onclick="Session.clear();location.reload()" style="display:none;"><i class="fa-solid fa-right-from-bracket"></i></button>
+  </div>
+  <div id="content"><div class="center" style="padding:60px;"><span class="spinner"></span></div></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/db.js?v=6"></script>
+<script src="js/main.js?v=5"></script>
+<script>
+/* ---------------- SELF-CONTAINED LOGIN GATE (no cross-page redirect) ---------------- */
+let s = Session.get();
+if(!s || !["leader","deputy"].includes(s.role)) s = null;
+let tab = "overview";
+
+function renderGate(){
+  document.getElementById("logoutBtn").style.display = "none";
+  const c = document.getElementById("content");
+  c.innerHTML = `
+    <div style="padding:16px;">
+      <div class="card glow center" style="padding:30px 20px;">
+        <div class="logo-frame lg" style="margin:0 auto 14px;"><img src="assets/logo.png"></div>
+        <div style="font-weight:900; font-size:17px;">دخول القيادة العليا</div>
+        <div class="muted" style="font-size:12px; margin-top:4px; margin-bottom:20px;">القائد الأعلى أو أحد النواب المعيّنين فقط</div>
+        <div class="field" style="text-align:right;">
+          <label><i class="fa-solid fa-lock"></i> كلمة المرور</label>
+          <div class="pw-wrap"><input type="password" id="gatePw" placeholder="أدخل كلمة المرور"><i class="fa-solid fa-eye" onclick="togglePw('gatePw',this)"></i></div>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="gateLogin()"><i class="fa-solid fa-right-to-bracket"></i> دخول لوحة التحكم</button>
+        <div class="hint mt12" id="gateHint"></div>
+      </div>
+    </div>`;
+  document.getElementById("gatePw").addEventListener("keydown", e=>{ if(e.key==="Enter") gateLogin(); });
+}
+async function gateLogin(){
+  const pw = document.getElementById("gatePw").value.trim();
+  if(!pw){ toast("أدخل كلمة المرور","error"); return; }
+  const isLeader = await DB.verifyLeader(pw);
+  if(isLeader){
+    const g = await DB.getGuild();
+    Session.set("leader", {name:g.leaderName});
+    s = Session.get();
+    toast("مرحبًا بعودتك أيها القائد","success");
+    boot();
+    return;
+  }
+  const dep = await DB.verifyDeputy(pw);
+  if(dep){
+    Session.set("deputy", {id:dep.id, name:dep.name});
+    s = Session.get();
+    toast("تم التحقق، مرحبًا "+dep.name,"success");
+    boot();
+    return;
+  }
+  toast("كلمة المرور غير صحيحة","error");
+}
+
+const TABS=[["overview","بيانات النقابة","fa-pen"],["leaders","القادة","fa-crown"],["deputies","النواب","fa-user-shield"],["bank","مسؤول البنك","fa-building-columns"],["store","مسؤول المتجر","fa-shop"],["passwords","الباسورد","fa-key"],["members","الأعضاء","fa-users"],["settings","الإعدادات","fa-gear"],["stats","الإحصائيات","fa-chart-column"]];
+
+async function boot(){
+  document.getElementById("logoutBtn").style.display = "";
+  document.getElementById("content").innerHTML = `
+    <div style="padding:16px;">
+      <div class="tabs" id="ldTabs">${TABS.map(t=>`<div class="tab" data-t="${t[0]}"><i class="fa-solid ${t[2]}"></i> ${t[1]}</div>`).join("")}</div>
+      <div id="ldBody"></div>
+    </div>`;
+  document.querySelectorAll("#ldTabs .tab").forEach(t=> t.onclick=()=>{ tab=t.dataset.t; paint(); load(); });
+  paint(); load();
+}
+function paint(){ document.querySelectorAll("#ldTabs .tab").forEach(t=>t.classList.toggle("active", t.dataset.t===tab)); }
+function emptyLD(m){ return `<div class="empty-state"><i class="fa-solid fa-inbox"></i>${m}</div>`; }
+const $ = id=>document.getElementById(id);
+
+async function load(){
+  const body = $("ldBody");
+  body.innerHTML = `<div class="center" style="padding:30px;"><span class="spinner"></span></div>`;
+  try{
+    if(tab==="overview") return await tabOverview(body);
+    if(tab==="leaders") return await tabPeople(body,"lead");
+    if(tab==="deputies") return await tabPeople(body,"dep");
+    if(tab==="bank"||tab==="store") return await tabAdmin(body,tab);
+    if(tab==="passwords") return await tabPasswords(body);
+    if(tab==="members") return await tabMembers(body);
+    if(tab==="settings") return tabSettings(body);
+    if(tab==="stats") return await tabStats(body);
+  }catch(e){ console.error(e); body.innerHTML = emptyLD("تعذّر تحميل القسم: "+esc(e.message)); }
+}
+
+/* ---------------- بيانات النقابة (كما هي) ---------------- */
+async function tabOverview(body){
+  const g = await DB.getGuild();
+  body.innerHTML = `
+    <div class="card glow">
+      <div class="card-title"><i class="fa-solid fa-crown"></i> ${esc(g.leaderName)}</div>
+      <div class="muted">القائد الأعلى لنقابة ${esc(g.name)} · #${esc(g.leaderId)}</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-pen"></i> بيانات النقابة العامة</div>
+      <div class="field"><label>اسم النقابة</label><input id="gName" value="${esc(g.name)}"></div>
+      <div class="field"><label>الشعار التعريفي (Tagline)</label><input id="gTag" value="${esc(g.tagline)}"></div>
+      <div class="field"><label>اسم القائد الأعلى</label><input id="gLeaderName" value="${esc(g.leaderName)}"></div>
+      <div class="field"><label>آيدي القائد</label><input id="gLeaderId" value="${esc(g.leaderId)}"></div>
+      <div class="field"><label>رقم تواصل القائد (واتساب)</label><input id="gLeaderWa" placeholder="9665xxxxxxxx" value="${esc(g.leaderWhatsapp||'')}"></div>
+      ${avatarPickerHTML("gLeaderAvatar", g.leaderAvatar, "صورة القائد")}
+      <div class="field"><label>نبذة عن البنك (تظهر في الصفحة الرئيسية)</label><textarea id="gIntro" rows="4">${esc(g.bankIntro||'')}</textarea></div>
+      <button class="btn btn-primary btn-block" onclick="saveGuild()"><i class="fa-solid fa-floppy-disk"></i> حفظ التغييرات</button>
+    </div>`;
+}
+async function saveGuild(){
+  try{
+    await DB.updateGuild({
+      name:$("gName").value, tagline:$("gTag").value, leaderName:$("gLeaderName").value, leaderId:$("gLeaderId").value,
+      leaderWhatsapp:$("gLeaderWa").value.trim(), leaderAvatar:getAvatar("gLeaderAvatar"), bankIntro:$("gIntro").value.trim(),
+    });
+    toast("تم حفظ بيانات النقابة","success");
+  }catch(e){ toast(e.message,"error"); }
+}
+
+/* ---------------- القادة / النواب (جدول) ---------------- */
+const PK = {
+  lead:{ title:"إدارة القادة", icon:"fa-crown", addLabel:"إضافة قائد جديد", search:"ابحث عن قائد باللقب...", defRole:"قائد", pw:false },
+  dep: { title:"إدارة النواب", icon:"fa-user-shield", addLabel:"إضافة نائب جديد", search:"ابحث عن نائب باللقب...", defRole:"نائب القائد", pw:true },
+};
+async function tabPeople(body, kind){
+  const c = PK[kind];
+  let rows = [];
+  if(kind==="lead"){
+    const g = await DB.getGuild(), ls = await DB.getLeaders();
+    rows = [{id:"main", main:true, name:g.leaderName, role:"القائد الأعلى", whatsapp:g.leaderWhatsapp, avatar:g.leaderAvatar}, ...ls];
+  } else rows = await DB.getDeputies();
+  body.innerHTML = `
+    <div class="card">
+      <div class="card-title" style="justify-content:center;"><i class="fa-solid ${c.icon}"></i> ${c.title}</div>
+      <div class="mgmt-head"><input id="pSearch" placeholder="${c.search}" oninput="filterRows(this.value)">
+        <button class="btn btn-primary btn-sm" onclick="load()"><i class="fa-solid fa-rotate"></i> تحديث</button></div>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>#</th><th>اللقب</th><th>المنصب</th><th>الرقم</th><th>الصورة</th><th>الإجراءات</th></tr></thead>
+      <tbody id="pBody">${rows.length? rows.map((r,i)=>`
+        <tr data-q="${esc(r.name)}"><td>${i}</td><td><b>${esc(r.name)}</b></td><td>${esc(r.role)}</td>
+        <td class="num">${r.whatsapp? "+"+esc(String(r.whatsapp).replace(/[^0-9]/g,"")) : "—"}</td>
+        <td>${r.avatar? `<img class="avatar" src="${esc(r.avatar)}">` : `<div class="ph">${esc((r.name||"?").charAt(0))}</div>`}</td>
+        <td><div class="acts"><button class="btn btn-outline btn-xs" onclick="openPerson('${kind}','${r.id}')"><i class="fa-solid fa-pen-to-square"></i> تعديل</button>
+        ${r.main? "" : `<button class="btn btn-danger btn-xs" onclick="delPerson('${kind}','${r.id}')"><i class="fa-solid fa-trash"></i> حذف</button>`}</div></td></tr>`).join("") : `<tr><td colspan="6">${emptyLD("لا يوجد أحد بعد")}</td></tr>`}</tbody></table></div>
+      <button class="btn btn-primary btn-block mt16" onclick="openPerson('${kind}')"><i class="fa-solid fa-user-plus"></i> ${c.addLabel}</button>
+    </div>`;
+}
+function filterRows(q){ q=q.trim(); document.querySelectorAll("#pBody tr[data-q]").forEach(r=> r.style.display = r.dataset.q.includes(q)?"":"none"); }
+
+async function openPerson(kind, id){
+  const c = PK[kind]; let d = {name:"", role:c.defRole, whatsapp:"", avatar:"", password:"", lid:""};
+  if(id==="main"){ const g=await DB.getGuild(); d={name:g.leaderName, role:"القائد الأعلى", whatsapp:g.leaderWhatsapp||"", avatar:g.leaderAvatar||"", password:"", lid:g.leaderId}; }
+  else if(id){ const list = kind==="dep"? await DB.getDeputies() : await DB.getLeaders(); d = {...d, ...(list.find(x=>x.id===id)||{})}; }
+  const main = id==="main";
+  let w=$("pModal"); if(w) w.remove();
+  w=document.createElement("div"); w.className="modal-bg show"; w.id="pModal";
+  w.innerHTML=`<div class="modal">
+    <div class="modal-head"><h3><i class="fa-solid ${id?'fa-pen':'fa-user-plus'}"></i> ${id?'تعديل':c.addLabel}</h3><button class="modal-close" onclick="$('pModal').remove()"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="field"><label>اللقب</label><input id="pName" value="${esc(d.name)}"></div>
+    <div class="field"><label>المنصب</label><input id="pRole" value="${esc(d.role)}" ${main?'disabled':''}></div>
+    ${main? `<div class="field"><label>آيدي القائد</label><input id="pLid" value="${esc(d.lid)}"></div>`:""}
+    <div class="field"><label>رقم الواتساب</label><input id="pWa" placeholder="9665xxxxxxxx" value="${esc(d.whatsapp)}"></div>
+    ${c.pw? `<div class="field"><label>كلمة مرور دخول لوحة التحكم</label><input id="pPass" value="${esc(d.password)}"></div>`:""}
+    ${avatarPickerHTML("pAvatar", d.avatar, "اختيار صورة اللقب")}
+    <button class="btn btn-primary btn-block" onclick="savePerson('${kind}','${id||""}')"><i class="fa-solid fa-check"></i> حفظ</button>
+  </div>`;
+  document.body.appendChild(w); Sound.open();
+}
+async function savePerson(kind, id){
+  const c = PK[kind], name=$("pName").value.trim(), wa=$("pWa").value.trim(), avatar=getAvatar("pAvatar");
+  if(!name){ toast("أدخل اللقب","error"); return; }
+  try{
+    if(id==="main"){
+      await DB.updateGuild({leaderName:name, leaderId:$("pLid").value.trim(), leaderWhatsapp:wa, leaderAvatar:avatar});
+    } else {
+      const role=$("pRole").value.trim()||c.defRole;
+      const data={name, role, whatsapp:wa, avatar};
+      if(c.pw){ const pw=$("pPass").value; if(!pw){ toast("أدخل كلمة المرور","error"); return; } data.password=pw; }
+      if(id){ kind==="dep"? await DB.updateDeputy(id,data) : await DB.updateLeader(id,data); }
+      else { kind==="dep"? await DB.addDeputy(data) : await DB.addLeader(data); }
+    }
+    $("pModal").remove(); toast("تم الحفظ بنجاح","success"); load();
+  }catch(e){ toast(e.message,"error"); }
+}
+function delPerson(kind, id){
+  confirmAction(kind==="dep"? "هل تريد عزل هذا النائب وإلغاء صلاحياته؟" : "هل تريد حذف هذا القائد؟", async ()=>{
+    kind==="dep"? await DB.removeDeputy(id) : await DB.removeLeader(id);
+    toast("تم الحذف","info"); load();
+  });
+}
+
+/* ---------------- مسؤول البنك / المتجر ---------------- */
+async function tabAdmin(body, role){
+  const a = (await DB.getAdmins())[role], isBank = role==="bank", label = isBank? "البنك":"المتجر";
+  body.innerHTML = `
+    <div class="card">
+      <div class="card-title" style="justify-content:center;"><i class="fa-solid ${isBank?'fa-building-columns':'fa-shop'}"></i> إدارة مسؤول ${label}</div>
+      <div class="field"><label><i class="fa-solid fa-user-shield"></i> لقب مسؤول ${label}</label><input id="adName" value="${esc(a.name)}"></div>
+      <div class="field"><label><i class="fa-solid fa-crown"></i> المنصب</label><input id="adRole" value="${esc(a.role||'')}"></div>
+      <div class="field"><label><i class="fa-brands fa-whatsapp"></i> رقم الواتساب</label><input id="adWa" placeholder="9665xxxxxxxx" value="${esc(a.whatsapp||'')}"></div>
+      ${avatarPickerHTML("adAvatar", a.avatar, "صورة اللقب")}
+      <div class="flex gap10">
+        <button class="btn btn-ghost btn-block" onclick="load()"><i class="fa-solid fa-rotate-left"></i> إعادة تعيين الحقول</button>
+        <button class="btn btn-primary btn-block" onclick="saveAdmin('${role}')"><i class="fa-solid fa-floppy-disk"></i> حفظ التعديلات</button>
+      </div>
+    </div>`;
+}
+async function saveAdmin(role){
+  try{
+    await DB.updateAdmin(role,{ name:$("adName").value.trim(), role:$("adRole").value.trim(), whatsapp:$("adWa").value.trim(), avatar:getAvatar("adAvatar") });
+    toast("تم تحديث بيانات المسؤول","success");
+  }catch(e){ toast(e.message,"error"); }
+}
+
+/* ---------------- تغيير الباسورد ---------------- */
+async function tabPasswords(body){
+  const a = await DB.getAdmins();
+  window._pw = {bank:a.bank.password, store:a.store.password};
+  const box = (id,label,icon)=>`<div class="field"><label><i class="fa-solid fa-lock"></i> ${label}</label>
+    <div class="pw-wrap"><input type="password" id="${id}" placeholder="أدخل ${label}"><i class="fa-solid fa-eye" onclick="togglePw('${id}',this)"></i></div></div>`;
+  body.innerHTML = `
+    <div class="card">
+      <div class="card-title" style="justify-content:center;"><i class="fa-solid fa-key"></i> تغيير الباسورد</div>
+      <div class="pwbox"><div class="t"><span><i class="fa-solid fa-circle-info"></i> الباسوردات الحالية</span><i class="fa-solid fa-eye" id="pwEye" onclick="togglePwVals()"></i></div>
+        <div>باسورد البنك: <span class="pwv" id="pwBank">••••••••</span></div>
+        <div>باسورد المتجر: <span class="pwv" id="pwStore">••••••••</span></div></div>
+      ${box("npBank","باسورد البنك الجديد")}
+      <button class="btn btn-primary btn-block" onclick="setPw('bank')"><i class="fa-solid fa-key"></i> تحديث باسورد البنك</button>
+      <div class="divider"></div>
+      ${box("npStore","باسورد المتجر الجديد")}
+      <button class="btn btn-primary btn-block" onclick="setPw('store')"><i class="fa-solid fa-key"></i> تحديث باسورد المتجر</button>
+      <div class="divider"></div>
+      ${box("npLeader","باسورد القائد الجديد")}
+      <button class="btn btn-primary btn-block" onclick="setPw('leader')"><i class="fa-solid fa-crown"></i> تحديث باسورد القائد</button>
+    </div>`;
+}
+function togglePwVals(){
+  const e=$("pwEye"), hidden=$("pwBank").textContent.startsWith("•");
+  $("pwBank").textContent = hidden? window._pw.bank : "••••••••";
+  $("pwStore").textContent = hidden? window._pw.store : "••••••••";
+  e.classList.toggle("fa-eye",!hidden); e.classList.toggle("fa-eye-slash",hidden);
+}
+async function setPw(kind){
+  const id = {bank:"npBank",store:"npStore",leader:"npLeader"}[kind], v=$(id).value.trim();
+  if(v.length<4){ toast("الباسورد لازم يكون 4 أحرف على الأقل","error"); return; }
+  try{
+    if(kind==="leader") await DB.updateGuild({leaderPassword:v}); else await DB.updateAdmin(kind,{password:v});
+    toast("تم تحديث الباسورد","success"); load();
+  }catch(e){ toast(e.message,"error"); }
+}
+
+/* ---------------- الأعضاء (كما هو) ---------------- */
+async function tabMembers(body){
+  const members = await DB.getMembers();
+  body.innerHTML = `
+    <div class="field"><input placeholder="بحث بالاسم أو الآيدي..." oninput="filterLdMembers(this.value)"></div>
+    <div id="ldMembersList">${members.length? members.map(ldMemberRow).join("") : emptyLD("لا يوجد أعضاء")}</div>`;
+}
+function ldMemberRow(m){
+  return `<div class="mrow" data-name="${esc(m.title)} ${esc(m.id)}">
+    <div class="info">
+      <img class="avatar" src="${esc(m.avatar||'assets/logo.png')}">
+      <div><div class="name">${esc(m.title)} <span class="muted">#${esc(m.id)}</span></div><div class="sub">${esc(m.rank)} · ${fmtMoney(m.balance)} EMD ${m.status==='frozen'?'<span class="badge badge-red">مجمد</span>':''}</div></div>
+    </div>
+    <div class="actions">
+      <button class="iconbtn" onclick="openEditMember('${m.id}')"><i class="fa-solid fa-pen"></i></button>
+      <button class="iconbtn danger" onclick="deleteLdMember('${m.id}')"><i class="fa-solid fa-trash"></i></button>
+    </div>
+  </div>`;
+}
+function filterLdMembers(q){
+  document.querySelectorAll("#ldMembersList .mrow").forEach(r=> r.style.display = r.dataset.name.includes(q.trim())?"flex":"none");
+}
+async function openEditMember(id){
+  const m = await DB.getMember(id);
+  let wrap=$("editMemberModal"); if(wrap) wrap.remove();
+  wrap=document.createElement("div"); wrap.className="modal-bg show"; wrap.id="editMemberModal";
+  wrap.innerHTML=`<div class="modal">
+    <div class="modal-head"><h3><i class="fa-solid fa-pen"></i> تعديل بيانات العضو</h3><button class="modal-close" onclick="$('editMemberModal').remove()"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="field"><label>اللقب</label><input id="emTitle" value="${esc(m.title)}"></div>
+    <div class="field"><label>الرتبة/المنصب</label><input id="emRank" value="${esc(m.rank)}"></div>
+    <div class="field"><label>كلمة المرور</label><input id="emPass" value="${esc(m.password)}"></div>
+    <div class="field"><label>واتساب</label><input id="emWa" value="${esc(m.whatsapp||'')}"></div>
+    <div class="field"><label>الرصيد</label><input id="emBalance" type="number" value="${esc(m.balance)}"></div>
+    ${avatarPickerHTML("emAvatar", m.avatar)}
+    <button class="btn btn-primary btn-block" onclick="submitEditMember('${id}')"><i class="fa-solid fa-check"></i> حفظ التعديلات</button>
+  </div>`;
+  document.body.appendChild(wrap); Sound.open();
+}
+async function submitEditMember(id){
+  try{
+    await DB.updateMember(id,{
+      title:$("emTitle").value, rank:$("emRank").value, password:$("emPass").value, whatsapp:$("emWa").value,
+      balance:Number($("emBalance").value)||0, avatar:getAvatar("emAvatar"),
+    });
+    $("editMemberModal").remove(); toast("تم حفظ التعديلات","success"); load();
+  }catch(e){ toast(e.message,"error"); }
+}
+function deleteLdMember(id){
+  confirmAction("سيتم حذف هذا العضو نهائيًا من قاعدة البيانات. متأكد؟", async ()=>{
+    await DB.deleteMember(id); toast("تم حذف العضو","info"); load();
+  });
+}
+
+/* ---------------- الإعدادات والصيانة ---------------- */
+function tabSettings(body){
+  body.innerHTML = `
+    <div class="card">
+      <div class="card-title" style="justify-content:center;"><i class="fa-solid fa-gear"></i> الإعدادات والصيانة</div>
+      <div class="act-card" onclick="exportData()"><i class="fa-solid fa-download"></i><div><b>تنزيل قاعدة البيانات</b><span>تصدير كل بيانات البنك في ملف JSON</span></div></div>
+      <div class="act-card warn" onclick="zeroBalances()"><i class="fa-solid fa-coins"></i><div><b>تصفير أرصدة الأعضاء</b><span>ضبط رصيد جميع الأعضاء إلى 0 فقط</span></div></div>
+      <div class="act-card bad" onclick="deleteAllMembers()"><i class="fa-solid fa-trash"></i><div><b>حذف جميع الأعضاء</b><span>حذف كل الأعضاء من قاعدة البيانات</span></div></div>
+    </div>
+    <div class="danger-box">
+      <div class="card-title" style="color:var(--danger);"><i class="fa-solid fa-triangle-exclamation"></i> منطقة الخطر</div>
+      <div class="muted mt8" style="font-size:12px;">يحذف كل بيانات النقابة (أعضاء، منتجات، معاملات) ويرجعها للوضع الافتراضي.</div>
+      <button class="btn btn-danger btn-block mt12" onclick="resetEverything()"><i class="fa-solid fa-radiation"></i> إعادة تعيين كامل النظام</button>
+    </div>`;
+}
+async function exportData(){
+  const json = await DB.exportJSON();
+  const blob = new Blob([json], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href=url; a.download="emerald_guild_backup.json"; a.click();
+  toast("تم تنزيل النسخة الاحتياطية","success");
+}
+function zeroBalances(){
+  confirmAction("سيتم ضبط رصيد كل الأعضاء إلى 0. خذ نسخة احتياطية أولًا. متأكد؟", async ()=>{ await DB.resetBalances(); toast("تم تصفير الأرصدة","success"); });
+}
+function deleteAllMembers(){
+  confirmAction("سيتم حذف جميع الأعضاء نهائيًا ولا يمكن التراجع. متأكد؟", async ()=>{ await DB.deleteAllMembers(); toast("تم حذف جميع الأعضاء","info"); });
+}
+async function resetEverything(){
+  confirmAction("تحذير نهائي: سيتم حذف كل شيء وإعادة الموقع لوضعه الافتراضي. هل أنت متأكد تمامًا؟", async ()=>{
+    await DB.resetAll(); toast("تمت إعادة تعيين النظام بالكامل","success"); setTimeout(()=>location.reload(), 900);
+  });
+}
+
+/* ---------------- الإحصائيات الشاملة ---------------- */
+async function tabStats(body){
+  const st = await DB.getStats();
+  const items = [
+    ["fa-users","عدد الأعضاء",st.membersCount],["fa-crown","عدد القادة",st.leadersCount],["fa-user-shield","عدد النواب",st.deputiesCount],
+    ["fa-coins","إجمالي الأرصدة",st.totalBalances],["fa-box","عدد السلع",st.productsCount],["fa-store","أقسام المتجر",st.categoriesCount],
+    ["fa-arrow-right-arrow-left","عدد التحويلات",st.transfersCount],["fa-sack-dollar","إجمالي الإيرادات",st.revenue],["fa-cart-shopping","عدد الطلبات",st.ordersCount],
+    ["fa-user-plus","طلبات تسجيل معلّقة",st.pendingRegistrations],["fa-hourglass-half","تحويلات معلّقة",st.pendingRequests],["fa-receipt","إجمالي المعاملات",st.transactionsCount],
+  ];
+  body.innerHTML = `
+    <div class="card">
+      <div class="card-title" style="justify-content:center;"><i class="fa-solid fa-chart-column"></i> الإحصائيات الشاملة</div>
+      <div class="grid-3 stagger">${items.map(i=>`<div class="stat"><i class="fa-solid ${i[0]}"></i><div class="val count-up" data-n="${Number(i[2])||0}">0</div><div class="lbl">${i[1]}</div></div>`).join("")}</div>
+      <button class="btn btn-primary btn-block mt16" onclick="load()"><i class="fa-solid fa-rotate"></i> تحديث الإحصائيات</button>
+    </div>`;
+  document.querySelectorAll("#ldBody .count-up").forEach(el=> countUp(el, Number(el.dataset.n)));
+}
+
+window.HELP_CTX = "leader";
+mountFab({});
+if(s){ boot(); } else { renderGate(); }
+</script>
+</body>
+</html>

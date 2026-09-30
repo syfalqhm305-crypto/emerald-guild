@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=768, viewport-fit=cover">
+<title>بنك إميرالد | Emerald Guild</title>
+<link rel="icon" href="assets/logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="css/style.css?v=5">
+<style>
+  .hero{ text-align:center; padding:26px 10px 6px; }
+  .hero .logo-frame{ animation:heroFloat 4s ease-in-out infinite; }
+  @keyframes heroFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+  .pad{ padding:0 16px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ===== الشريط العلوي: الشعار + أيقونات التنقل ===== -->
+  <div class="topbar nav-top">
+    <a href="#about" class="brand" style="text-decoration:none;">
+      <div class="logo-frame sm"><img src="assets/logo.png" alt="logo"></div>
+      <div><div class="name" id="guildNameTop">إميرالد</div></div>
+    </a>
+    <nav class="topnav" id="topnav">
+      <a href="#about" data-s="about" class="active"><i class="fa-solid fa-circle-info"></i> عن البنك</a>
+      <a href="#login" data-s="login"><i class="fa-solid fa-user"></i> دخول</a>
+      <a href="#contact" data-s="contact"><i class="fa-solid fa-headset"></i> تواصل</a>
+      <a href="#services" data-s="services"><i class="fa-solid fa-star"></i> خدماتنا</a>
+      <a href="#leadership" data-s="leadership"><i class="fa-solid fa-crown"></i> القيادة</a>
+      <a href="store.html"><i class="fa-solid fa-shop"></i> متجر</a>
+    </nav>
+  </div>
+
+  <!-- ===== 1) الشعار + الترحيب ===== -->
+  <div class="hero">
+    <div class="logo-frame xl" style="margin:0 auto;"><img src="assets/logo.png" alt="logo"></div>
+  </div>
+  <div class="pad" style="margin-top:20px;">
+    <div class="card glow welcome">
+      <div class="w-title"><i class="fa-solid fa-gem"></i> مرحباً بكم في بنك إميرالد</div>
+      <div class="w-tag" id="guildTagline"></div>
+    </div>
+  </div>
+
+  <!-- ===== 2) نبذة عن البنك ===== -->
+  <div class="pad sec rv" id="about">
+    <div class="card">
+      <div class="card-title" style="justify-content:center;"><i class="fa-solid fa-building-columns"></i> نبذة عن البنك</div>
+      <div class="about-text" id="bankIntro"></div>
+      <div class="hint center mt12"><i class="fa-solid fa-circle-question"></i> إذا أردت شرحًا مفصلًا لكيفية استخدام الموقع، اضغط على أيقونة الاستفهام أسفل يسار الشاشة</div>
+    </div>
+  </div>
+
+  <!-- ===== 3) الإحصائيات ===== -->
+  <div class="sec-title rv"><i class="fa-solid fa-chart-line"></i> إحصائيات سريعة</div>
+  <div class="grid-4 stagger pad">
+    <div class="stat"><i class="fa-solid fa-users"></i><div class="val count-up" id="statMembers">0</div><div class="lbl">عضو فعّال</div></div>
+    <div class="stat"><i class="fa-solid fa-coins"></i><div class="val count-up" id="statBalances">0</div><div class="lbl">إجمالي الأرصدة</div></div>
+    <div class="stat"><i class="fa-solid fa-arrow-right-arrow-left"></i><div class="val count-up" id="statTransfers">0</div><div class="lbl">عملية تحويل</div></div>
+    <div class="stat"><i class="fa-solid fa-shop"></i><div class="val count-up" id="statProducts">0</div><div class="lbl">سلعة في المتجر</div></div>
+  </div>
+
+  <!-- ===== 4) تسجيل دخول العضو ===== -->
+  <div class="pad sec rv" id="login" style="margin-top:24px;">
+    <div class="card">
+      <div class="card-title" style="justify-content:center;"><i class="fa-solid fa-user"></i> تسجيل دخول العضو</div>
+      <div class="field"><label><i class="fa-solid fa-hashtag"></i> الآيدي الشخصي</label><input id="mId" inputmode="numeric" placeholder="أدخل الرقم الشخصي" autocomplete="off"></div>
+      <div class="field"><label><i class="fa-solid fa-tag"></i> لقب العضو</label><input id="mTitle" placeholder="أدخل لقبك في النقابة" autocomplete="off"></div>
+      <div class="field"><label><i class="fa-solid fa-lock"></i> كلمة المرور</label>
+        <div class="pw-wrap"><input type="password" id="mPass" placeholder="كلمة المرور" autocomplete="off"><i class="fa-solid fa-eye" onclick="togglePw('mPass',this)"></i></div>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="memberLogin()"><i class="fa-solid fa-right-to-bracket"></i> دخول العضو</button>
+      <div class="divider"></div>
+      <div class="muted center" style="margin-bottom:10px;">ليس لديك حساب في البنك؟</div>
+      <button class="btn btn-outline btn-block" onclick="openRegister()"><i class="fa-solid fa-user-plus"></i> قدّم طلب تسجيل عضوية</button>
+    </div>
+  </div>
+
+  <!-- ===== 5) استفسارات عن البنك (مسؤول البنك) ===== -->
+  <div class="pad sec rv" id="contact">
+    <div class="card">
+      <div class="card-title" style="justify-content:center;"><i class="fa-solid fa-headset"></i> استفسارات عن البنك</div>
+      <div class="muted center" style="margin-bottom:14px;">لأي استفسار أو مساعدة يمكنك التواصل مباشرة مع مسؤول البنك</div>
+      <div id="bankManager" style="max-width:260px;margin:0 auto;"></div>
+    </div>
+  </div>
+
+  <!-- ===== 6) خدماتنا المميزة ===== -->
+  <div class="sec sec-title rv" id="services"><i class="fa-solid fa-star"></i> خدماتنا المميزة</div>
+  <div class="svc-grid rv">
+    <div class="svc"><i class="fa-solid fa-shield-halved"></i><span>أمان عالي</span></div>
+    <div class="svc"><i class="fa-solid fa-bolt"></i><span>سرعة فائقة</span></div>
+    <div class="svc"><i class="fa-solid fa-headset"></i><span>دعم 24/7</span></div>
+    <div class="svc"><i class="fa-solid fa-gift"></i><span>مكافآت حصرية</span></div>
+  </div>
+
+  <!-- ===== 7) قيادة النقابة ===== -->
+  <div class="sec sec-title rv" id="leadership"><i class="fa-solid fa-crown"></i> قيادة النقابة</div>
+  <div class="sec-sub rv">لأي استفسارات عن النقابة أو لحل أي مشكلة، تواصل مع قيادة النقابة</div>
+  <div class="people-grid stagger rv" id="leadGrid"></div>
+
+  <!-- ===== 8) متجر النقابة ===== -->
+  <div class="pad rv" style="margin-top:22px;">
+    <div class="card info-card">
+      <div class="card-title" style="justify-content:center;"><i class="fa-solid fa-shop"></i> متجر النقابة</div>
+      <p>متجر إميرالد يوفّر مجموعة متنوعة من الرتب والمنتجات للأعضاء، ويمكن استخدام رصيدك في البنك لشراء ما تحتاجه. يتم تحديث السلع باستمرار.</p>
+      <a href="store.html" class="btn btn-primary btn-block"><i class="fa-solid fa-cart-shopping"></i> دخول إلى المتجر</a>
+    </div>
+  </div>
+
+  <!-- ===== 9) المبرمج ===== -->
+  <div class="sec-title rv" style="font-size:13px;"><i class="fa-solid fa-code"></i> مبرمج ومطوّر الموقع</div>
+  <div class="people-grid one rv" id="devGrid"></div>
+
+  <div style="height:30px"></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/db.js?v=6"></script>
+<script src="js/main.js?v=5"></script>
+<script>
+window.HELP_CTX = "home";
+mountFab({admin:"bank", leader:true});
+
+function picFail(img){ const d=document.createElement("div"); d.className="pic ph"; d.innerHTML='<i class="fa-solid fa-user"></i>'; img.replaceWith(d); }
+function picHTML(src){
+  return src ? `<img class="pic" src="${esc(src)}" alt="" onerror="picFail(this)">` : `<div class="pic ph"><i class="fa-solid fa-user"></i></div>`;
+}
+function contactBtn(num, msg, label){
+  return num
+    ? `<a class="btn btn-primary" href="${waLink(num,msg)}" target="_blank"><i class="fa-brands fa-whatsapp"></i> ${label}</a>`
+    : `<button class="btn btn-ghost" disabled><i class="fa-brands fa-whatsapp"></i> لم يُضف رقم التواصل</button>`;
+}
+function personCard(o){
+  return `<div class="pcard ${o.cls||''}">
+    ${o.tag?`<span class="rank-tag">${esc(o.tag)}</span>`:""}
+    ${picHTML(o.avatar)}
+    <div class="p-name">${esc(o.name)}</div>
+    <div class="p-role">${esc(o.role||"")}</div>
+    ${o.num?`<div class="p-num"><i class="fa-solid fa-phone"></i> ${esc(o.num)}</div>`:""}
+    ${contactBtn(o.num, o.msg, o.label||"تواصل")}
+  </div>`;
+}
+
+async function loadHome(){
+ try{
+  const [g, stats, deps, admins] = await Promise.all([DB.getGuild(), DB.getStats(), DB.getDeputies(), DB.getAdmins()]);
+  document.getElementById("guildNameTop").textContent = g.name;
+  document.getElementById("guildTagline").textContent = g.tagline || "";
+  document.getElementById("bankIntro").textContent = g.bankIntro || "";
+
+  countUp(document.getElementById("statMembers"), stats.activeMembers);
+  countUp(document.getElementById("statBalances"), stats.totalBalances);
+  countUp(document.getElementById("statTransfers"), stats.transfersCount);
+  countUp(document.getElementById("statProducts"), stats.activeProducts);
+
+  document.getElementById("bankManager").innerHTML = personCard({
+    avatar:admins.bank.avatar, name:admins.bank.name, role:admins.bank.role||"مسؤول البنك", num:admins.bank.whatsapp,
+    msg:"مرحبًا، لدي استفسار بخصوص بنك إميرالد", label:"تواصل مع مسؤول البنك", cls:"flat"
+  });
+
+  const leaders = await DB.getLeaders();
+  const cards = [ personCard({cls:"leader", tag:"قائد", avatar:g.leaderAvatar, name:g.leaderName, role:"القائد الأعلى", num:g.leaderWhatsapp, msg:"تحية طيبة يا "+g.leaderName}) ];
+  leaders.forEach(l=> cards.push(personCard({cls:"leader", tag:"قائد", avatar:l.avatar, name:l.name, role:l.role, num:l.whatsapp, msg:"تحية طيبة يا "+l.name})));
+  deps.forEach(d=> cards.push(personCard({tag:"نائب", avatar:d.avatar, name:d.name, role:d.role, num:d.whatsapp, msg:"تحية طيبة يا "+d.name})));
+  document.getElementById("leadGrid").innerHTML = cards.join("");
+
+  document.getElementById("devGrid").innerHTML = personCard({
+    avatar:DEVELOPER.avatar, name:DEVELOPER.name, role:DEVELOPER.role, num:DEVELOPER.phoneDisplay,
+    msg:"مرحبًا، أتواصل معك بخصوص موقع بنك إميرالد", label:"تواصل مع المبرمج"
+  });
+ }catch(e){ console.error(e); toast("حدث خطأ أثناء تحميل البيانات: "+e.message,"error"); }
+ initReveal();
+}
+
+function finishLogin(m){
+  if(m.status==="frozen"){ toast("حسابك مجمّد، تواصل مع مسؤول البنك","error"); return; }
+  Session.set("member",{id:m.id});
+  toast("مرحبًا بعودتك، "+m.title,"success");
+  setTimeout(()=>location.href="bank.html", 500);
+}
+async function memberLogin(){
+ try{
+  const id = document.getElementById("mId").value.trim();
+  const title = document.getElementById("mTitle").value.trim();
+  const pass = document.getElementById("mPass").value;
+  if(!id||!title||!pass){ toast("عبّي كل الحقول","error"); return; }
+  const m = await DB.verifyMember(id,title,pass);
+  if(m){ finishLogin(m); return; }
+  // اللقب وكلمة المرور صحيحان لكن الآيدي غير مطابق
+  const alt = await DB.findMemberByTitlePass(title,pass);
+  if(alt){ askCorrectId(alt); return; }
+  // طلب تسجيل لم يُقبل بعد؟
+  const reg = await DB.findRegistration(title,pass);
+  if(reg && reg.status==="pending"){ toast("طلب تسجيلك قيد المراجعة عند مسؤول البنك (آيديك: "+reg.memberId+")","info"); return; }
+  if(reg && reg.status==="rejected"){ toast("تم رفض طلب تسجيلك"+(reg.reason?": "+reg.reason:""),"error"); return; }
+  toast("بيانات الدخول غير صحيحة","error");
+ }catch(e){ console.error(e); toast("خطأ غير متوقع: "+e.message,"error"); }
+}
+function askCorrectId(m){
+  let w=document.getElementById("idModal"); if(w) w.remove();
+  w=document.createElement("div"); w.className="modal-bg show"; w.id="idModal";
+  w.innerHTML=`<div class="modal" style="max-width:360px;">
+    <div class="modal-head"><h3><i class="fa-solid fa-triangle-exclamation" style="color:var(--warning)"></i> الـ ID غير صحيح</h3>
+      <button class="modal-close" onclick="document.getElementById('idModal').remove()"><i class="fa-solid fa-xmark"></i></button></div>
+    <p class="muted" style="line-height:2;margin-bottom:12px;">اللقب «${esc(m.title)}» صحيح، لكن الـ ID الذي أدخلته غير مطابق للـ ID المسجّل. هل تريد الاستمرار بالـ ID الصحيح؟</p>
+    <div class="pwbox"><div class="t">البيانات الصحيحة:</div>الـ ID الصحيح: <b class="pwv">${esc(m.id)}</b></div>
+    <div class="flex gap10">
+      <button class="btn btn-ghost btn-block" onclick="document.getElementById('idModal').remove()"><i class="fa-solid fa-xmark"></i> إلغاء</button>
+      <button class="btn btn-primary btn-block" id="idOk"><i class="fa-solid fa-check"></i> تأكيد</button>
+    </div></div>`;
+  document.body.appendChild(w); Sound.open();
+  document.getElementById("idOk").onclick=()=>{ w.remove(); finishLogin(m); };
+}
+
+/* ---------- طلب تسجيل عضوية ---------- */
+function openRegister(){
+  let w=document.getElementById("regModal"); if(w) w.remove();
+  w=document.createElement("div"); w.className="modal-bg show"; w.id="regModal";
+  w.innerHTML=`<div class="modal">
+    <div class="modal-head"><h3><i class="fa-solid fa-user-plus"></i> طلب تسجيل عضوية</h3>
+      <button class="modal-close" onclick="document.getElementById('regModal').remove()"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="notice"><i class="fa-solid fa-triangle-exclamation"></i><div>اكتب رتبتك الحقيقية فقط. إذا ذكرت أنك <b>نائب</b> أو <b>مستشار</b> أو كتبت رتبة غير صحيحة، سيتم رفض طلب تسجيلك.</div></div>
+    <div class="field"><label><i class="fa-solid fa-tag"></i> اللقب</label><input id="rgTitle" placeholder="لقبك في النقابة" autocomplete="off"></div>
+    <div class="field"><label><i class="fa-solid fa-crown"></i> الرتبة</label><input id="rgRank" placeholder="رتبتك الحقيقية" autocomplete="off"></div>
+    <div class="field"><label><i class="fa-solid fa-lock"></i> كلمة المرور</label>
+      <div class="pw-wrap"><input type="password" id="rgPass" placeholder="4 أحرف على الأقل" autocomplete="off"><i class="fa-solid fa-eye" onclick="togglePw('rgPass',this)"></i></div></div>
+    ${avatarPickerHTML("rgAvatar","","صورتك")}
+    <div class="hint" style="margin-bottom:12px;"><i class="fa-solid fa-hashtag"></i> الـ ID يتولّد لك تلقائيًا بعد إرسال الطلب.</div>
+    <button class="btn btn-primary btn-block" onclick="submitRegister()"><i class="fa-solid fa-paper-plane"></i> إرسال الطلب لمسؤول البنك</button>
+  </div>`;
+  document.body.appendChild(w); Sound.open();
+}
+async function submitRegister(){
+  const title=document.getElementById("rgTitle").value, rank=document.getElementById("rgRank").value, pass=document.getElementById("rgPass").value;
+  if(!title.trim()||!rank.trim()||!pass){ toast("أكمل اللقب والرتبة وكلمة المرور","error"); return; }
+  if(pass.length<4){ toast("كلمة المرور لازم تكون 4 أحرف على الأقل","error"); return; }
+  try{
+    const r = await DB.addRegistration({title, rank, password:pass, avatar:getAvatar("rgAvatar")});
+    document.getElementById("regModal").remove();
+    let w=document.createElement("div"); w.className="modal-bg show";
+    w.innerHTML=`<div class="modal" style="text-align:center;max-width:360px;">
+      <i class="fa-solid fa-circle-check" style="font-size:38px;color:var(--success);margin-bottom:10px;"></i>
+      <div style="font-weight:800;margin-bottom:6px;">تم إرسال طلب تسجيلك</div>
+      <div class="muted" style="margin-bottom:12px;">بانتظار موافقة مسؤول البنك. احتفظ بالـ ID التالي لتسجيل الدخول بعد القبول:</div>
+      <div class="bal-card" style="direction:ltr;">${esc(r.memberId)}</div>
+      <button class="btn btn-primary btn-block" onclick="this.closest('.modal-bg').remove()">تمام</button></div>`;
+    document.body.appendChild(w); Sound.success();
+  }catch(e){ toast(e.message,"error"); }
+}
+document.getElementById("mPass").addEventListener("keydown", e=>{ if(e.key==="Enter") memberLogin(); });
+
+/* تمييز القسم الحالي في الشريط العلوي */
+(function(){
+  const links = [...document.querySelectorAll("#topnav a[data-s]")];
+  const secs = links.map(a=>document.getElementById(a.dataset.s));
+  function spy(){
+    let cur = 0;
+    secs.forEach((s,i)=>{ if(s && s.getBoundingClientRect().top < 140) cur = i; });
+    links.forEach((a,i)=>a.classList.toggle("active", i===cur));
+  }
+  window.addEventListener("scroll", spy, {passive:true}); spy();
+})();
+
+if(new URLSearchParams(location.search).get("authRequired")){
+  toast("تحتاج تسجيل الدخول أولًا للوصول لهذه الصفحة","info");
+  history.replaceState(null,"",location.pathname);
+}
+loadHome();
+</script>
+</body>
+</html>
